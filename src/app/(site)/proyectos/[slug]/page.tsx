@@ -7,8 +7,6 @@ import { ProjectCover } from '@/components/ProjectCover';
 import { ProjectLinks } from '@/components/ProjectLinks';
 import { ProjectCard } from '@/components/ProjectCard';
 
-export const dynamicParams = false;
-
 export async function generateStaticParams() {
   return (await getProjects()).map((p) => ({ slug: p.slug }));
 }
