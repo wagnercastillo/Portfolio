@@ -2,7 +2,8 @@ import { config, collection, singleton, fields } from '@keystatic/core';
 
 export default config({
   storage:
-    process.env.NODE_ENV === 'production'
+    // GitHub solo cuando la GitHub App está configurada (Vercel); si no, archivos locales
+    process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
       ? { kind: 'github', repo: 'wagnercastillo/portfolio' }
       : { kind: 'local' },
   ui: { brand: { name: 'Portafolio' } },
