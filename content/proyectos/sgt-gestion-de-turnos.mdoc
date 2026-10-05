@@ -1,0 +1,32 @@
+---
+titulo: "SGT — Gestión de turnos"
+resumen: "Sistema de turnos para agencias de Cooperativa JEP con nodo local offline y sincronización con la central."
+cliente: "Cooperativa JEP"
+categoria: "Cliente"
+stack:
+  - "NestJS"
+  - "Prisma"
+  - "PostgreSQL"
+  - "Next.js"
+  - "Tauri"
+  - "WebSocket"
+  - "LDAP"
+destacado: true
+orden: 2
+fecha: 2026-09-01
+estado: "Completado"
+---
+## Problema
+
+Las agencias necesitaban gestionar colas de atención aunque se cayera la conexión con la central.
+
+## Solución
+
+Arquitectura de seis aplicaciones: servidor central, nodo local por agencia con sincronización bidireccional, kiosko, consola de operador y pantalla de TV.
+
+## Funcionalidades
+
+- Kiosko con emisión de turnos y QR
+- Consola de operador y pantalla de llamado
+- Operación offline con sincronización bidireccional
+- Reportes consolidados en CSV y autenticación con Active Directory

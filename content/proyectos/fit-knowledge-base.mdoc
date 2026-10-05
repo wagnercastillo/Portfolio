@@ -1,0 +1,31 @@
+---
+titulo: "FIT Knowledge Base"
+resumen: "Base de conocimiento para documentar transacciones del sistema bancario FIT con flujo de aprobación."
+cliente: "Cooperativa JEP"
+categoria: "Cliente"
+stack:
+  - "NestJS"
+  - "Prisma"
+  - "PostgreSQL"
+  - "Next.js"
+  - "React Query"
+  - "LDAP"
+destacado: false
+orden: 7
+fecha: 2026-06-01
+estado: "Completado"
+---
+## Problema
+
+La documentación técnica de las transacciones bancarias estaba dispersa y sin control de versiones.
+
+## Solución
+
+Knowledge base con roles, flujo de revisión y búsqueda full-text en español.
+
+## Funcionalidades
+
+- RBAC con 4 roles
+- Flujo DRAFT → IN_REVIEW → PUBLISHED
+- Versionado con snapshots JSONB y auditoría
+- Búsqueda full-text en español con PostgreSQL

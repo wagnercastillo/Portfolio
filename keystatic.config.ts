@@ -70,14 +70,42 @@ export default config({
         nombre: fields.text({ label: 'Nombre' }),
         rol: fields.text({ label: 'Rol' }),
         bio: fields.text({ label: 'Bio', multiline: true }),
+        ubicacion: fields.text({ label: 'Ubicación' }),
         email: fields.text({ label: 'Email' }),
+        telefono: fields.text({ label: 'Teléfono / WhatsApp (formato +593...)' }),
         linkedin: fields.url({ label: 'LinkedIn' }),
         github: fields.url({ label: 'GitHub' }),
         cv: fields.file({ label: 'CV (PDF)', directory: 'public/cv', publicPath: '/cv/' }),
-        tecnologias: fields.array(fields.text({ label: 'Tecnología' }), {
-          label: 'Tecnologías',
-          itemLabel: (p) => p.value,
-        }),
+        experiencia: fields.array(
+          fields.object({
+            cargo: fields.text({ label: 'Cargo' }),
+            empresa: fields.text({ label: 'Empresa' }),
+            periodo: fields.text({ label: 'Periodo (ej. Oct 2025 – Jun 2026)' }),
+            logros: fields.array(fields.text({ label: 'Logro' }), {
+              label: 'Logros',
+              itemLabel: (p) => p.value,
+            }),
+          }),
+          { label: 'Experiencia', itemLabel: (p) => `${p.fields.cargo.value} · ${p.fields.empresa.value}` },
+        ),
+        educacion: fields.array(
+          fields.object({
+            titulo: fields.text({ label: 'Título' }),
+            detalle: fields.text({ label: 'Institución / detalle' }),
+          }),
+          { label: 'Educación', itemLabel: (p) => p.fields.titulo.value },
+        ),
+        habilidades: fields.array(
+          fields.object({
+            grupo: fields.text({ label: 'Grupo' }),
+            items: fields.array(fields.text({ label: 'Habilidad' }), {
+              label: 'Habilidades',
+              itemLabel: (p) => p.value,
+            }),
+          }),
+          { label: 'Habilidades', itemLabel: (p) => p.fields.grupo.value },
+        ),
+        idiomas: fields.text({ label: 'Idiomas' }),
       },
     }),
   },

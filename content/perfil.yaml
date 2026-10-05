@@ -1,0 +1,54 @@
+nombre: Cristhoper Castillo
+rol: Ingeniero en Ciencias de la Computación · Full-Stack Developer
+bio: >-
+  Ingeniero en Ciencias de la Computación con experiencia en aplicaciones web escalables, modulares y eficientes.
+  Combino frontend y backend para construir soluciones completas con código limpio y mantenible, y tengo vocación
+  por automatizar procesos. He entregado sistemas para banca cooperativa, seguros, energía y recursos humanos.
+ubicacion: Loja, Ecuador
+email: wagner.cristhoper.castillo@gmail.com
+telefono: "+593991483745"
+linkedin: https://www.linkedin.com/in/wagner-cristhoper/
+github: https://github.com/wagnercastillo
+cv: /cv/CV_Cristhoper_Castillo.pdf
+experiencia:
+  - cargo: Desarrollador Full Stack
+    empresa: Teams4Soft
+    periodo: Oct 2025 – Jun 2026
+    logros:
+      - Migración de sistema legado de Visual Basic 6 a .NET con frontend en React/TypeScript.
+      - Desarrollo del módulo de recursos humanos con Next.js y TypeScript.
+      - Containerización de entornos con Docker para desarrollo y producción.
+      - Mantenimiento de stored procedures y optimización de consultas en SQL Server.
+      - quinielast4s.com, plataforma pública de predicciones deportivas en producción.
+  - cargo: Técnico de Soporte TI
+    empresa: Cooperativa de Ahorro y Crédito JEP
+    periodo: Jun 2024 – Oct 2025
+    logros:
+      - Aplicación web institucional para gestión de activos TI (React/TypeScript, PrimeReact, TanStack Query).
+      - Instalación y configuración de equipos para nuevas agencias.
+      - Atención y resolución de requerimientos de soporte técnico.
+      - Administración del sistema de turnos e infraestructura institucional.
+  - cargo: Desarrollador Full Stack
+    empresa: Universidad Nacional de Loja
+    periodo: Abr 2023 – Feb 2024
+    logros:
+      - API e interfaz web para predicción de energía eólica en la Central Villonaco con datos SCADA y red neuronal LSTM.
+      - Backend con NestJS y Python/Flask/TensorFlow; frontend responsive con React/Redux.
+      - Diseño de base de datos MongoDB y administración de contenedores Docker.
+educacion:
+  - titulo: Ingeniero en Ciencias de la Computación
+    detalle: Universidad Nacional de Loja — Loja, Ecuador
+  - titulo: Certificaciones en Desarrollo Web y Seguridad de la Información
+    detalle: Cisco (2) · Udemy (6) · Otras plataformas (4)
+habilidades:
+  - grupo: Frontend
+    items: [JavaScript, TypeScript, React, Redux, Angular, RxJS, Next.js, Tailwind CSS, Material UI, Chart.js, PrimeReact]
+  - grupo: Backend
+    items: [Node.js, Express, NestJS, PHP, Laravel, Livewire, Python, Django, Flask, TensorFlow, Java, REST APIs, GraphQL]
+  - grupo: DevOps & Infraestructura
+    items: [Docker, Git, GitLab, GitHub, Active Directory, Linux]
+  - grupo: Bases de datos
+    items: [PostgreSQL, MySQL, SQL Server, MongoDB, Firebase, Redis]
+  - grupo: Habilidades blandas
+    items: [Trabajo en equipo, Adaptabilidad, Resolución de problemas, Comunicación efectiva, Proactividad]
+idiomas: Español (nativo) · Inglés (básico)
