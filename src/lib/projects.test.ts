@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   sortProjects, featured, categoriesOf, byCategory,
-  coverHue, initials, projectLinks, type Project,
+  coverHue, initials, projectLinks, projectsUsing, brandColor, type Project,
 } from './projects';
 
 const base: Project = {
@@ -64,5 +64,38 @@ describe('projectLinks', () => {
   it('omite vacíos', () => {
     expect(projectLinks({ demo: null, repo: '' })).toEqual([]);
     expect(projectLinks({ demo: 'https://x.com', repo: null })).toEqual([{ label: 'Ver demo', href: 'https://x.com' }]);
+  });
+});
+
+describe('projectsUsing', () => {
+  const list = [
+    p({ slug: 'a', stack: ['NestJS', 'PostgreSQL'] }),
+    p({ slug: 'b', stack: ['Next.js', 'LDAP'] }),
+    p({ slug: 'c', stack: ['MUI', 'React Query'] }),
+  ];
+  it('coincide ignorando mayúsculas y puntuación', () => {
+    expect(projectsUsing('nestjs', list).map((x) => x.slug)).toEqual(['a']);
+    expect(projectsUsing('Next.js', list).map((x) => x.slug)).toEqual(['b']);
+  });
+  it('usa alias (Active Directory ↔ LDAP, Material UI ↔ MUI)', () => {
+    expect(projectsUsing('Active Directory', list).map((x) => x.slug)).toEqual(['b']);
+    expect(projectsUsing('Material UI', list).map((x) => x.slug)).toEqual(['c']);
+  });
+  it('no confunde prefijos (React no es React Query)', () => {
+    expect(projectsUsing('React', list)).toEqual([]);
+  });
+  it('sin coincidencias → []', () => expect(projectsUsing('Cobol', list)).toEqual([]));
+});
+
+describe('brandColor', () => {
+  it('conserva colores legibles en ambos temas', () => expect(brandColor('E0234E')).toBe('#E0234E'));
+  it('descarta casi negros y casi blancos', () => {
+    expect(brandColor('000000')).toBeNull();
+    expect(brandColor('181717')).toBeNull();
+    expect(brandColor('FFFFFF')).toBeNull();
+  });
+  it('acepta # y valores inválidos devuelven null', () => {
+    expect(brandColor('#3178C6')).toBe('#3178C6');
+    expect(brandColor('xyz')).toBeNull();
   });
 });
