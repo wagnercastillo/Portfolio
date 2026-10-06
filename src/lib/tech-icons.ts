@@ -7,7 +7,11 @@ export interface TechIcon { d: string; kind: 'fill' | 'stroke'; color: string | 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 // Nombre del CV → slug de Simple Icons cuando el título no coincide.
-const SLUGS: Record<string, string> = { materialui: 'mui', java: 'openjdk', rxjs: 'reactivex' };
+const SLUGS: Record<string, string> = {
+  materialui: 'mui', java: 'openjdk', rxjs: 'reactivex', fcm: 'firebase', vb6: 'dotnet', vbnet: 'dotnet',
+  claudeapi: 'claude', gemini: 'googlegemini', tanstackquery: 'reactquery', googleoauth: 'google',
+  whatsappapi: 'whatsapp', gorouter: 'flutter', websocket: 'socketdotio',
+};
 
 // Íconos de trazo (viewBox 24) para lo que no tiene logo de marca.
 const GENERIC: Record<string, string> = {
@@ -22,8 +26,10 @@ const GENERIC: Record<string, string> = {
 };
 const FALLBACK = 'M16 18l6-6-6-6M8 6l-6 6 6 6';
 
-const bySlug = new Map(Object.values(si).map((i) => [i.slug, i]));
-const byTitle = new Map(Object.values(si).map((i) => [norm(i.title), i]));
+// solo entradas que son íconos (bajo interop CJS aparece también un 'default')
+const all = Object.values(si).filter((i): i is si.SimpleIcon => typeof (i as si.SimpleIcon)?.title === 'string');
+const bySlug = new Map(all.map((i) => [i.slug, i]));
+const byTitle = new Map(all.map((i) => [norm(i.title), i]));
 
 export function techIcon(name: string): TechIcon {
   const n = norm(name.normalize('NFD').replace(/[̀-ͯ]/g, ''));

@@ -6,6 +6,8 @@ import { getProject, getProjects } from '@/lib/content';
 import { ProjectCover } from '@/components/ProjectCover';
 import { ProjectLinks } from '@/components/ProjectLinks';
 import { ProjectCard } from '@/components/ProjectCard';
+import { TechIconSvg } from '@/components/TechIconSvg';
+import { techIcon } from '@/lib/tech-icons';
 
 export async function generateStaticParams() {
   return (await getProjects()).map((p) => ({ slug: p.slug }));
@@ -49,7 +51,16 @@ export default async function ProjectPage({ params }: Props) {
           <span className="label">Estado</span>
           <span style={{ fontSize: 30, fontWeight: 800 }}>{p.estado}</span>
           <span className="label">Stack</span>
-          <ul className="chips sm">{p.stack.map((s) => <li key={s} style={{ background: 'color-mix(in oklab, var(--inv-fg) 12%, var(--inv-bg))' }}>{s}</li>)}</ul>
+          <ul className="chips sm stack-chips">
+            {p.stack.map((s) => {
+              const icon = techIcon(s);
+              return (
+                <li key={s} style={{ '--brand': icon.color ?? 'var(--accent)' } as React.CSSProperties}>
+                  <TechIconSvg icon={icon} size={16} />{s}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </section>
 

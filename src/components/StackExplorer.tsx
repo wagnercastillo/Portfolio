@@ -2,20 +2,13 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { TechIcon } from '@/lib/tech-icons';
+import { TechIconSvg as Icon } from './TechIconSvg';
 
 export interface TechItem {
   name: string;
   group: string;
   icon: TechIcon;
   projects: { slug: string; titulo: string; cliente: string }[];
-}
-
-function Icon({ icon, size = 28 }: { icon: TechIcon; size?: number }) {
-  return icon.kind === 'fill' ? (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true"><path d={icon.d} /></svg>
-  ) : (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={icon.d} /></svg>
-  );
 }
 
 /** Mosaico de tecnologías con pestañas por grupo; al elegir una muestra los proyectos donde se usó. */
@@ -26,6 +19,37 @@ export function StackExplorer({ items, groups, clientes }: { items: TechItem[]; 
   const [sel, setSel] = useState<TechItem | null>(null);
   const [pill, setPill] = useState({ left: 4, width: 0 });
   const btns = useRef<Record<string, HTMLButtonElement | null>>({});
+  const grid = useRef<HTMLUListElement>(null);
+
+  // Efecto dock: los íconos cercanos al cursor crecen en onda (solo mouse, sin "reducir movimiento").
+  useEffect(() => {
+    const ul = grid.current;
+    if (!ul || !matchMedia('(pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const RADIUS = 150, MAX = 0.55;
+    let raf = 0, x = 0, y = 0;
+    const apply = () => {
+      raf = 0;
+      ul.querySelectorAll<HTMLElement>('.tech').forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const d = Math.hypot(x - (r.left + r.width / 2), y - (r.top + r.height / 2));
+        const t = Math.max(0, 1 - d / RADIUS);
+        el.style.setProperty('--dock', (1 + MAX * t * t).toFixed(3));
+      });
+    };
+    const move = (e: PointerEvent) => {
+      x = e.clientX; y = e.clientY;
+      ul.classList.add('docking');
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+    const leave = () => {
+      cancelAnimationFrame(raf); raf = 0;
+      ul.classList.remove('docking');
+      ul.querySelectorAll<HTMLElement>('.tech').forEach((el) => el.style.removeProperty('--dock'));
+    };
+    ul.addEventListener('pointermove', move);
+    ul.addEventListener('pointerleave', leave);
+    return () => { leave(); ul.removeEventListener('pointermove', move); ul.removeEventListener('pointerleave', leave); };
+  }, []);
 
   useEffect(() => {
     const place = () => {
@@ -56,7 +80,7 @@ export function StackExplorer({ items, groups, clientes }: { items: TechItem[]; 
             ))}
           </div>
         </div>
-        <ul className="tech-grid">
+        <ul className="tech-grid" ref={grid}>
           {shown.map((t, i) => (
             <li key={`${tab}-${t.name}`} className={changed ? 'enter' : undefined} style={{ '--d': i } as React.CSSProperties}>
               <button type="button" className="tech" style={brand(t)} aria-pressed={sel?.name === t.name}
