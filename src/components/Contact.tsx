@@ -1,9 +1,16 @@
+import Image from 'next/image';
 import type { Perfil } from '@/lib/content';
 
 export function Contact({ perfil }: { perfil: Perfil }) {
   const wa = perfil.telefono.replace(/\D/g, '');
   return (
     <section id="contacto" className="card contact reveal" aria-labelledby="ct">
+      {perfil.foto && (
+        <div className="avatar">
+          <Image src={perfil.foto} alt="" width={72} height={72} />
+          <span className="mono">Soy {perfil.nombre.split(' ')[0]}: hablarás directamente conmigo, sin intermediarios.</span>
+        </div>
+      )}
       <h2 id="ct" className="scramble">¿Construimos algo juntos?</h2>
       <p className="mono" style={{ margin: '16px 0 0', fontSize: 14, color: 'var(--inv-muted)' }}>{perfil.ubicacion}</p>
       <div style={{ marginTop: 40, display: 'flex', flexWrap: 'wrap', gap: 12 }}>

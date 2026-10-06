@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Perfil } from '@/lib/content';
 
 const WORDS = ['Software', 'que', 'funciona', 'en'];
@@ -22,14 +23,25 @@ export function Hero({ perfil, total }: { perfil: Perfil; total: number }) {
           <a href="#contacto" className="btn btn-soft magnet">Contactar</a>
         </div>
       </div>
-      <div style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: 16, minWidth: 0 }}>
-        <div className="card stat inv reveal" style={v('--d', 2)}>
-          <span className="label">Proyectos entregados</span>
-          <span className="big" data-count={total}>{total}</span>
-        </div>
-        <div className="card stat acc reveal" style={v('--d', 3)}>
-          <span className="label">Industrias</span>
-          <span style={{ fontSize: 26, fontWeight: 700, lineHeight: 1.2 }}>Banca · Seguros · Energía · RRHH</span>
+      <div className="hero-side">
+        {perfil.foto && (
+          <figure className="card photo tilt reveal" style={v('--d', 1)}>
+            <Image src={perfil.foto} alt={`Foto de ${perfil.nombre}`} fill priority sizes="(min-width: 1024px) 420px, 100vw" />
+            <figcaption>
+              <strong>{perfil.nombre}</strong>
+              <span className="mono">{perfil.ubicacion}</span>
+            </figcaption>
+          </figure>
+        )}
+        <div className="hero-stats">
+          <div className="card stat inv reveal" style={v('--d', 2)}>
+            <span className="label">Proyectos</span>
+            <span className="big" data-count={total}>{total}</span>
+          </div>
+          <div className="card stat acc reveal" style={v('--d', 3)}>
+            <span className="label">Industrias</span>
+            <span style={{ fontSize: 18, fontWeight: 700, lineHeight: 1.25 }}>Banca · Seguros · Energía · RRHH</span>
+          </div>
         </div>
       </div>
     </section>

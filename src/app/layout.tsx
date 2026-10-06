@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title: { default: 'Cristhoper Castillo — Full-Stack Developer', template: '%s · Cristhoper Castillo' },
   description: 'Portafolio de proyectos de Cristhoper Castillo, Ingeniero en Ciencias de la Computación y Full-Stack Developer en Loja, Ecuador.',
-  openGraph: { type: 'website', locale: 'es_ES', siteName: 'Cristhoper Castillo' },
+  openGraph: { type: 'website', locale: 'es_ES', siteName: 'Cristhoper Castillo', images: ['/perfil/cristhoper.jpg'] },
 };
 
 // Aplica tema y preferencia de cursor antes de pintar para evitar parpadeo.

@@ -70,6 +70,7 @@ export default config({
       schema: {
         nombre: fields.text({ label: 'Nombre' }),
         rol: fields.text({ label: 'Rol' }),
+        foto: fields.image({ label: 'Foto (vertical 4:5)', directory: 'public/perfil', publicPath: '/perfil/' }),
         bio: fields.text({ label: 'Bio', multiline: true }),
         ubicacion: fields.text({ label: 'Ubicación' }),
         email: fields.text({ label: 'Email' }),
