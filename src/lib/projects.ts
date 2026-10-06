@@ -71,3 +71,10 @@ export const brandColor = (hex: string) => {
   const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
   return l < 0.06 || l > 0.85 ? null : `#${h.toUpperCase()}`;
 };
+
+/** Elementos presentes en todas las listas (por slug), en el orden de la primera. */
+export const intersectBySlug = <T extends { slug: string }>(lists: T[][]): T[] => {
+  if (!lists.length) return [];
+  const rest = lists.slice(1).map((l) => new Set(l.map((x) => x.slug)));
+  return lists[0].filter((x) => rest.every((s) => s.has(x.slug)));
+};

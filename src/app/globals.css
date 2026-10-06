@@ -195,6 +195,17 @@ h1, h2, h3 { margin: 0; letter-spacing: -.03em; }
 .tech-projects a:hover { transform: translateX(4px); background: color-mix(in oklab, var(--brand) 10%, var(--surface-2)); }
 .tech-projects strong { font-size: 15px; }
 .tech-projects span { font-size: 11px; color: var(--muted); }
+.tech.dim { opacity: .35; filter: grayscale(1); }
+.tech.dim:hover { opacity: .7; }
+.combo-chips { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.combo-chips li { display: inline-flex; align-items: center; gap: 8px; padding: 6px 6px 6px 12px; border-radius: 999px; font: 500 13px var(--mono); color: var(--fg); background: color-mix(in oklab, var(--brand) 14%, var(--surface-2)); border: 1px solid color-mix(in oklab, var(--brand) 40%, transparent); animation: pop .35s cubic-bezier(.2, .8, .2, 1) both; }
+.combo-chips svg { color: var(--brand); }
+.combo-chips button { width: 26px; height: 26px; border: 0; border-radius: 50%; background: var(--surface); color: var(--fg); cursor: pointer; font-size: 16px; line-height: 1; }
+.combo-chips button:hover { background: var(--fg); color: var(--bg); }
+.combo-count { display: flex; align-items: baseline; gap: 12px; padding: 16px 18px; border-radius: 14px; background: var(--inv-bg); color: var(--inv-fg); }
+.combo-count b { font-size: 48px; font-weight: 800; line-height: 1; letter-spacing: -.04em; color: var(--accent); animation: pop .4s cubic-bezier(.3, 1.6, .5, 1) both; }
+:root:not([data-theme='dark']) .combo-count b { color: #9DB0FF; }
+.combo-count span { font: 500 13px var(--mono); color: var(--inv-muted); }
 @media (max-width: 680px) { .tech-panel { position: static; } }
 
 /* experiencia */

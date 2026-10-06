@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   sortProjects, featured, categoriesOf, byCategory,
-  coverHue, initials, projectLinks, projectsUsing, brandColor, type Project,
+  coverHue, initials, projectLinks, projectsUsing, brandColor, intersectBySlug, type Project,
 } from './projects';
 
 const base: Project = {
@@ -97,5 +97,17 @@ describe('brandColor', () => {
   it('acepta # y valores inválidos devuelven null', () => {
     expect(brandColor('#3178C6')).toBe('#3178C6');
     expect(brandColor('xyz')).toBeNull();
+  });
+});
+
+describe('intersectBySlug', () => {
+  const a = { slug: 'a' }, b = { slug: 'b' }, c = { slug: 'c' };
+  it('devuelve solo lo común a todas las listas, en el orden de la primera', () => {
+    expect(intersectBySlug([[a, b, c], [c, a], [a, c]])).toEqual([a, c]);
+  });
+  it('una sola lista → la misma lista', () => expect(intersectBySlug([[b, a]])).toEqual([b, a]));
+  it('sin listas o con una vacía → []', () => {
+    expect(intersectBySlug([])).toEqual([]);
+    expect(intersectBySlug([[a], []])).toEqual([]);
   });
 });
