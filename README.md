@@ -27,7 +27,13 @@ Tu perfil, experiencia, educación, habilidades y CV se editan en **Perfil**.
 Keystatic usa GitHub como almacenamiento solo si existe `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`; sin esa variable usa archivos locales.
 
 1. Subir el repo a GitHub (`wagnercastillo/portfolio`) e importarlo en Vercel.
-2. Abrir `<dominio>/keystatic` en local con el modo GitHub activado y seguir el asistente para crear la GitHub App; Keystatic genera las variables.
+2. Crear la GitHub App en local. El modo GitHub se activa con cualquier valor en la variable del slug, así que arranca con un valor temporal:
+
+   ```bash
+   NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=pending npm run dev
+   ```
+
+   Abre `http://localhost:3000/keystatic` y sigue el asistente. Al terminar, Keystatic escribe en `.env` las cuatro variables (incluido el slug real).
 3. Cargar en Vercel:
    - `NEXT_PUBLIC_SITE_URL` (ej. `https://tu-dominio.com`)
    - `KEYSTATIC_GITHUB_CLIENT_ID`
