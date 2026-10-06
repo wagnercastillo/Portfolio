@@ -4,7 +4,7 @@ export default config({
   storage:
     // GitHub solo cuando la GitHub App está configurada (Vercel); si no, archivos locales
     process.env.NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
-      ? { kind: 'github', repo: 'wagnercastillo/portfolio' }
+      ? { kind: 'github', repo: 'wagnercastillo/Portfolio' }
       : { kind: 'local' },
   ui: { brand: { name: 'Portafolio' } },
   collections: {
