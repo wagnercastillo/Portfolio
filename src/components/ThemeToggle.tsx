@@ -4,8 +4,13 @@ export function ThemeToggle() {
   const toggle = (e: React.MouseEvent) => {
     const root = document.documentElement;
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    // Sin esto, ~290 elementos con transition de color arrancan a la vez y cada frame repinta la página.
+    // El efecto visual ya lo da la View Transition, así que el cambio se aplica de golpe.
     const apply = () => {
+      root.classList.add('no-transitions');
       root.dataset.theme = next;
+      void root.offsetHeight; // aplica los nuevos estilos sin transición
+      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('no-transitions')));
       try { localStorage.setItem('theme', next); } catch {}
     };
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
