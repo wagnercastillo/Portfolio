@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { HeroPhotos } from './HeroPhotos';
 import type { Perfil } from '@/lib/content';
 
 const WORDS = ['Software', 'que', 'funciona', 'en'];
@@ -25,13 +25,7 @@ export function Hero({ perfil, total }: { perfil: Perfil; total: number }) {
       </div>
       <div className="hero-side">
         {perfil.foto && (
-          <figure className="card photo tilt reveal" style={v('--d', 1)}>
-            <Image src={perfil.foto} alt={`Foto de ${perfil.nombre}`} fill priority sizes="(min-width: 1024px) 420px, 100vw" />
-            <figcaption>
-              <strong>{perfil.nombre}</strong>
-              <span className="mono">{perfil.ubicacion}</span>
-            </figcaption>
-          </figure>
+          <HeroPhotos photos={[{ imagen: perfil.foto, enfoque: 'arriba' }, ...perfil.galeria]} nombre={perfil.nombre} ubicacion={perfil.ubicacion} />
         )}
         <div className="hero-stats">
           <div className="card stat inv reveal" style={v('--d', 2)}>

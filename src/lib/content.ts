@@ -9,7 +9,7 @@ const reader = createReader(process.cwd(), config);
 
 export interface Experiencia { cargo: string; empresa: string; periodo: string; logros: string[] }
 export interface Perfil {
-  nombre: string; rol: string; foto: string | null; bio: string; ubicacion: string; email: string; telefono: string;
+  nombre: string; rol: string; foto: string | null; galeria: { imagen: string; enfoque: string }[]; bio: string; ubicacion: string; email: string; telefono: string;
   linkedin: string; github: string; cv: string | null;
   experiencia: Experiencia[];
   educacion: { titulo: string; detalle: string }[];
@@ -56,6 +56,7 @@ export async function getPerfil(): Promise<Perfil> {
     linkedin: p.linkedin ?? '',
     github: p.github ?? '',
     foto: p.foto ?? null,
+    galeria: p.galeria.filter((g) => g.imagen).map((g) => ({ imagen: g.imagen!, enfoque: g.enfoque })),
     cv: p.cv ?? null,
     experiencia: p.experiencia.map((x) => ({ ...x, logros: [...x.logros] })),
     educacion: [...p.educacion],

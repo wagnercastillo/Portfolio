@@ -70,7 +70,18 @@ export default config({
       schema: {
         nombre: fields.text({ label: 'Nombre' }),
         rol: fields.text({ label: 'Rol' }),
-        foto: fields.image({ label: 'Foto (vertical 4:5)', directory: 'public/perfil', publicPath: '/perfil/' }),
+        foto: fields.image({ label: 'Foto principal (vertical 4:5)', directory: 'public/perfil', publicPath: '/perfil/' }),
+        galeria: fields.array(
+          fields.object({
+            imagen: fields.image({ label: 'Foto (vertical 4:5)', directory: 'public/perfil', publicPath: '/perfil/' }),
+            enfoque: fields.select({
+              label: 'Enfoque (qué parte se ve si se recorta)',
+              options: [{ label: 'Arriba', value: 'arriba' }, { label: 'Centro', value: 'centro' }, { label: 'Abajo', value: 'abajo' }],
+              defaultValue: 'centro',
+            }),
+          }),
+          { label: 'Más fotos (carrusel del inicio)', itemLabel: (p) => p.fields.imagen.value?.filename ?? 'Foto' },
+        ),
         bio: fields.text({ label: 'Bio', multiline: true }),
         ubicacion: fields.text({ label: 'Ubicación' }),
         email: fields.text({ label: 'Email' }),

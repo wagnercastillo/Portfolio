@@ -88,8 +88,14 @@ h1, h2, h3 { margin: 0; letter-spacing: -.03em; }
 .hero-stats .stat { padding: 22px; }
 .hero-stats .big { font-size: 64px; }
 .photo { margin: 0; flex: 1; min-height: 360px; aspect-ratio: auto; background: var(--inv-bg); }
-.photo img { object-fit: cover; object-position: 50% 22%; transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
-.photo:hover img { transform: scale(1.04); }
+.photo img { object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity 1s ease, transform 1.6s cubic-bezier(.2, .8, .2, 1); }
+.photo img.on { opacity: 1; transform: none; }
+.photo:hover img.on { transform: scale(1.04); }
+.photo-next { position: absolute; inset: 0; z-index: 1; border: 0; background: transparent; cursor: pointer; }
+.photo-dots { display: flex; gap: 6px; margin-top: 8px; }
+.photo-dots i { width: 6px; height: 6px; border-radius: 999px; background: rgba(255, 255, 255, .45); transition: width .4s cubic-bezier(.3, 1.4, .5, 1), background-color .3s; }
+.photo-dots i.on { width: 20px; background: #fff; }
+.photo figcaption { z-index: 2; pointer-events: none; }
 .photo figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 20px 18px; display: flex; flex-direction: column; gap: 4px; color: #fff; background: linear-gradient(transparent, rgba(0, 0, 0, .62)); }
 .photo figcaption strong { font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
 .photo figcaption span { font-size: 12px; opacity: .85; }
