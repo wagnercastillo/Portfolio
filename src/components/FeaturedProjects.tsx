@@ -3,6 +3,7 @@ import type { Project } from '@/lib/projects';
 import { ProjectCover } from './ProjectCover';
 import { ProjectCard } from './ProjectCard';
 import { TurnoTicket } from './TurnoTicket';
+import { stackIcons } from '@/lib/tech-icons';
 
 const d = (n: number) => ({ '--d': n }) as React.CSSProperties;
 
@@ -47,11 +48,11 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
             <TurnoTicket />
             <div><h3>{second.titulo}</h3><p>{second.resumen}</p></div>
           </Link>
-        ) : <ProjectCard project={second} className="reveal" style={d(1)} />)}
+        ) : <ProjectCard project={second} icons={stackIcons(second.stack)} className="reveal" style={d(1)} />)}
       </div>
       {rest.length > 0 && (
         <div className="grid">
-          {rest.map((p, i) => <ProjectCard key={p.slug} project={p} className="reveal" style={d(i)} />)}
+          {rest.map((p, i) => <ProjectCard key={p.slug} project={p} icons={stackIcons(p.stack)} className="reveal" style={d(i)} />)}
         </div>
       )}
     </section>

@@ -7,7 +7,7 @@ import { ProjectCover } from '@/components/ProjectCover';
 import { ProjectLinks } from '@/components/ProjectLinks';
 import { ProjectCard } from '@/components/ProjectCard';
 import { TechIconSvg } from '@/components/TechIconSvg';
-import { techIcon } from '@/lib/tech-icons';
+import { stackIcons, techIcon } from '@/lib/tech-icons';
 
 export async function generateStaticParams() {
   return (await getProjects()).map((p) => ({ slug: p.slug }));
@@ -84,7 +84,7 @@ export default async function ProjectPage({ params }: Props) {
         <section aria-labelledby="mas" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <h2 id="mas" className="section-title reveal scramble" style={{ margin: '32px 4px 0' }}>Más proyectos · {p.categoria}</h2>
           <div className="grid">
-            {others.map((o, i) => <ProjectCard key={o.slug} project={o} className="reveal" style={{ '--d': i } as React.CSSProperties} />)}
+            {others.map((o, i) => <ProjectCard key={o.slug} project={o} icons={stackIcons(o.stack)} className="reveal" style={{ '--d': i } as React.CSSProperties} />)}
           </div>
         </section>
       )}

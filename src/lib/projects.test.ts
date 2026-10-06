@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   sortProjects, featured, categoriesOf, byCategory,
-  coverHue, initials, projectLinks, projectsUsing, brandColor, intersectBySlug, type Project,
+  coverHue, initials, projectLinks, projectsUsing, brandColor, intersectBySlug, wrapIndex, statusInfo, type Project,
 } from './projects';
 
 const base: Project = {
@@ -109,5 +109,22 @@ describe('intersectBySlug', () => {
   it('sin listas o con una vacía → []', () => {
     expect(intersectBySlug([])).toEqual([]);
     expect(intersectBySlug([[a], []])).toEqual([]);
+  });
+});
+
+describe('wrapIndex', () => {
+  it('avanza y retrocede en círculo', () => {
+    expect(wrapIndex(0, 1, 3)).toBe(1);
+    expect(wrapIndex(2, 1, 3)).toBe(0);
+    expect(wrapIndex(0, -1, 3)).toBe(2);
+  });
+  it('lista vacía → 0', () => expect(wrapIndex(0, 1, 0)).toBe(0));
+});
+
+describe('statusInfo', () => {
+  it('clase y año por estado', () => {
+    expect(statusInfo(p({ estado: 'En producción', fecha: '2026-07-01' }))).toEqual({ kind: 'live', label: 'En producción', year: '2026' });
+    expect(statusInfo(p({ estado: 'En desarrollo', fecha: '2026-10-01' })).kind).toBe('wip');
+    expect(statusInfo(p({ estado: 'Completado', fecha: '' }))).toEqual({ kind: 'done', label: 'Completado', year: '' });
   });
 });

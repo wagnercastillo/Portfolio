@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { byCategory, categoriesOf, type Categoria, type Project } from '@/lib/projects';
+import { byCategory, categoriesOf, wrapIndex, type Categoria } from '@/lib/projects';
 import { ProjectCard } from './ProjectCard';
+import { QuickView, type CardProject } from './QuickView';
 
 type Filtro = Categoria | 'Todos';
 
-export function ProjectGrid({ projects }: { projects: Project[] }) {
+export function ProjectGrid({ projects, bodies }: { projects: CardProject[]; bodies: Record<string, React.ReactNode> }) {
   const [cat, setCat] = useState<Filtro>('Todos');
   const [filtered, setFiltered] = useState(false);
   const [pill, setPill] = useState({ left: 4, width: 0 });
@@ -24,6 +25,10 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
   }, [cat]);
 
   const pick = (c: Filtro) => { setCat(c); setFiltered(true); };
+  const shown = byCategory(projects, cat);
+  const [open, setOpen] = useState<number | null>(null);
+  const [dir, setDir] = useState(1);
+  const nav = (delta: number) => { setDir(delta); setOpen((i) => (i === null ? i : wrapIndex(i, delta, shown.length))); };
 
   return (
     <section aria-labelledby="todos" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -39,15 +44,18 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
         </div>
       </div>
       <div className="pgrid">
-        {byCategory(projects, cat).map((p, i) => (
+        {shown.map((p, i) => (
           <ProjectCard
             key={`${cat}-${p.slug}`}
             project={p}
+            icons={p.icons}
+            onOpen={() => { setDir(1); setOpen(i); }}
             className={filtered ? 'enter' : 'reveal'}
             style={{ '--d': filtered ? i : i % 3 } as React.CSSProperties}
           />
         ))}
       </div>
+      <QuickView items={shown} index={open} bodies={bodies} dir={dir} onClose={() => setOpen(null)} onNav={nav} />
     </section>
   );
 }

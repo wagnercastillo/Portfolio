@@ -28,7 +28,7 @@ export const featured = (p: Project[]) => sortProjects(p.filter((x) => x.destaca
 export const categoriesOf = (p: Project[]) =>
   CATEGORIAS.filter((c) => p.some((x) => x.categoria === c));
 
-export const byCategory = (p: Project[], c: Categoria | 'Todos') =>
+export const byCategory = <T extends Project>(p: T[], c: Categoria | 'Todos'): T[] =>
   c === 'Todos' ? p : p.filter((x) => x.categoria === c);
 
 export const coverHue = (slug: string) =>
@@ -78,3 +78,15 @@ export const intersectBySlug = <T extends { slug: string }>(lists: T[][]): T[] =
   const rest = lists.slice(1).map((l) => new Set(l.map((x) => x.slug)));
   return lists[0].filter((x) => rest.every((s) => s.has(x.slug)));
 };
+
+/** Índice siguiente/anterior en una lista circular. */
+export const wrapIndex = (i: number, delta: number, len: number) => (len ? (((i + delta) % len) + len) % len : 0);
+
+const STATUS: Record<Estado, 'live' | 'wip' | 'done'> = { 'En producción': 'live', 'En desarrollo': 'wip', Completado: 'done' };
+
+/** Datos del badge de estado de una tarjeta. */
+export const statusInfo = (p: Pick<Project, 'estado' | 'fecha'>) => ({
+  kind: STATUS[p.estado] ?? 'done',
+  label: p.estado,
+  year: p.fecha.slice(0, 4),
+});

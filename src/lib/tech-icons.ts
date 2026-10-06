@@ -37,3 +37,8 @@ export function techIcon(name: string): TechIcon {
   const icon = (SLUGS[n] && bySlug.get(SLUGS[n])) || byTitle.get(n);
   return icon ? { d: icon.path, kind: 'fill', color: brandColor(icon.hex) } : { d: FALLBACK, kind: 'stroke', color: null };
 }
+
+export interface IconRef { name: string; icon: TechIcon }
+
+/** Íconos del stack de un proyecto para su portada (máx. 6). */
+export const stackIcons = (stack: string[]): IconRef[] => stack.slice(0, 6).map((name) => ({ name, icon: techIcon(name) }));
