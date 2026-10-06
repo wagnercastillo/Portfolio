@@ -1,8 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { buildMessage, mailtoLink, waLink } from '@/lib/contact';
+import { mailtoLink, waLink, type Brief } from '@/lib/contact';
 
-const NEEDS: [string, string][] = [
+export const NEEDS: [string, string][] = [
   ['App web', 'una app web'],
   ['API / Backend', 'una API / backend'],
   ['App móvil', 'una app móvil'],
@@ -10,37 +9,30 @@ const NEEDS: [string, string][] = [
   ['Migrar un sistema', 'migrar un sistema existente'],
   ['Consultoría', 'consultoría técnica'],
 ];
-const WHEN: [string, string][] = [
+export const WHEN: [string, string][] = [
   ['Lo antes posible', 'lo antes posible'],
   ['1–3 meses', 'en 1 a 3 meses'],
   ['Explorando ideas', 'sin fecha, estoy explorando ideas'],
 ];
 
-/** Chips + nota → mensaje redactado en vivo, listo para WhatsApp o email. */
-export function MessageBuilder({ email, telefono }: { email: string; telefono: string }) {
-  const [needs, setNeeds] = useState<string[]>([]);
-  const [when, setWhen] = useState<string | null>(null);
-  const [name, setName] = useState('');
-  const [note, setNote] = useState('');
-  const message = buildMessage({
-    needs: NEEDS.filter(([l]) => needs.includes(l)).map(([, p]) => p),
-    when: WHEN.find(([l]) => l === when)?.[1] ?? null,
-    note,
-    name,
-  });
+/** Estado del formulario: etiquetas elegidas tal como se muestran en los chips. */
+export interface Form { needs: string[]; when: string | null; name: string; note: string }
 
-  // "escribiendo…" breve cada vez que cambia el mensaje
-  const [shown, setShown] = useState(message);
-  const [typing, setTyping] = useState(false);
-  useEffect(() => {
-    if (message === shown) return;
-    setTyping(true);
-    const t = setTimeout(() => { setShown(message); setTyping(false); }, 380);
-    return () => clearTimeout(t);
-  }, [message, shown]);
+export const toBrief = (f: Form): Brief => ({
+  needs: NEEDS.filter(([l]) => f.needs.includes(l)).map(([, p]) => p),
+  when: WHEN.find(([l]) => l === f.when)?.[1] ?? null,
+  note: f.note,
+  name: f.name,
+});
 
-  const toggle = (l: string) => setNeeds((n) => (n.includes(l) ? n.filter((x) => x !== l) : [...n, l]));
-  const subject = needs.length ? `Proyecto: ${needs.join(', ')}` : 'Contacto desde tu portafolio';
+/** Chips + campos que componen el mensaje; la vista previa vive en el teléfono. */
+export function MessageBuilder({ form, onChange, message, email, telefono, onSend }: {
+  form: Form; onChange: (update: (f: Form) => Form) => void; message: string; email: string; telefono: string; onSend: () => void;
+}) {
+  // actualizaciones funcionales: dos clics seguidos no se pisan
+  const set = (p: Partial<Form> | ((f: Form) => Partial<Form>)) => onChange((f) => ({ ...f, ...(typeof p === 'function' ? p(f) : p) }));
+  const toggle = (l: string) => set((f) => ({ needs: f.needs.includes(l) ? f.needs.filter((x) => x !== l) : [...f.needs, l] }));
+  const subject = form.needs.length ? `Proyecto: ${form.needs.join(', ')}` : 'Contacto desde tu portafolio';
 
   return (
     <div className="builder">
@@ -48,42 +40,33 @@ export function MessageBuilder({ email, telefono }: { email: string; telefono: s
       <fieldset>
         <legend>¿Qué necesitas?</legend>
         <div className="opt-chips">
-          {NEEDS.map(([l]) => (
-            <button key={l} type="button" aria-pressed={needs.includes(l)} onClick={() => toggle(l)}>{l}</button>
-          ))}
+          {NEEDS.map(([l]) => <button key={l} type="button" aria-pressed={form.needs.includes(l)} onClick={() => toggle(l)}>{l}</button>)}
         </div>
       </fieldset>
       <fieldset>
         <legend>¿Para cuándo?</legend>
         <div className="opt-chips">
-          {WHEN.map(([l]) => (
-            <button key={l} type="button" aria-pressed={when === l} onClick={() => setWhen(when === l ? null : l)}>{l}</button>
-          ))}
+          {WHEN.map(([l]) => <button key={l} type="button" aria-pressed={form.when === l} onClick={() => set((f) => ({ when: f.when === l ? null : l }))}>{l}</button>)}
         </div>
       </fieldset>
       <div className="builder-fields">
         <label>
           <span>Tu nombre (opcional)</span>
-          <input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} autoComplete="name" />
+          <input value={form.name} onChange={(e) => set({ name: e.target.value })} maxLength={60} autoComplete="name" />
         </label>
         <label>
           <span>Algo más (opcional)</span>
-          <input value={note} onChange={(e) => setNote(e.target.value)} maxLength={280} placeholder="Ej. es para una clínica en Quito" />
+          <input value={form.note} onChange={(e) => set({ note: e.target.value })} maxLength={280} placeholder="Ej. es para una clínica en Quito" />
         </label>
       </div>
-      <div className="preview" aria-live="polite">
-        <span className="label">Vista previa</span>
-        <div className="preview-bubble">
-          {typing ? <span className="typing" aria-hidden="true"><i /><i /><i /></span> : <p>{shown}</p>}
-        </div>
-      </div>
+      <p className="label" style={{ margin: 0, textTransform: 'none', letterSpacing: 0 }}>Mira cómo llega tu mensaje en el teléfono →</p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
         {telefono && (
-          <a className="btn btn-accent magnet" href={waLink(telefono, message)} target="_blank" rel="noopener noreferrer">
+          <a className="btn btn-accent magnet" href={waLink(telefono, message)} target="_blank" rel="noopener noreferrer" onClick={onSend}>
             Enviar por WhatsApp <span className="arr">→</span>
           </a>
         )}
-        <a className="btn btn-dark magnet" href={mailtoLink(email, subject, message)}>Enviar por email</a>
+        <a className="btn btn-dark magnet" href={mailtoLink(email, subject, message)} onClick={onSend}>Enviar por email</a>
       </div>
     </div>
   );

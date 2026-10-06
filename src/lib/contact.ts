@@ -34,3 +34,15 @@ export function localTime(now: Date) {
   const hour = Number(get('hour'));
   return { time: `${get('hour')}:${get('minute')}`, working: WORK.days.includes(day) && hour >= WORK.from && hour < WORK.to };
 }
+
+const LOJA_OFFSET = -300; // minutos respecto a UTC (Ecuador no usa horario de verano)
+
+/** Frase con la diferencia entre la hora del visitante (offset en minutos, ej. -300) y Loja. */
+export function timeDiffLabel(visitorOffset: number) {
+  const diff = visitorOffset - LOJA_OFFSET;
+  if (diff === 0) return '¡Estamos en la misma hora!';
+  const abs = Math.abs(diff), h = Math.floor(abs / 60), m = abs % 60;
+  return `Vas ${h} h${m ? ` ${m} min` : ''} ${diff > 0 ? 'adelante' : 'detrás'} de mí`;
+}
+
+export const cityFromTz = (tz: string) => (tz ? tz.split('/').pop()!.replace(/_/g, ' ') : 'tu ciudad');

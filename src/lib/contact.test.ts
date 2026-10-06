@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildMessage, waLink, mailtoLink, formatPhone, localTime } from './contact';
+import { buildMessage, waLink, mailtoLink, formatPhone, localTime, timeDiffLabel, cityFromTz } from './contact';
 
 describe('buildMessage', () => {
   it('mensaje genérico sin selección', () => {
@@ -39,4 +39,16 @@ describe('localTime', () => {
     expect(localTime(new Date('2026-10-07T02:00:00Z')).working).toBe(false); // 21:00 martes
     expect(localTime(new Date('2026-10-10T15:00:00Z')).working).toBe(false); // sábado 10:00
   });
+});
+
+describe('timeDiffLabel (offset del visitante en minutos respecto a UTC; Loja = -300)', () => {
+  it('misma hora', () => expect(timeDiffLabel(-300)).toBe('¡Estamos en la misma hora!'));
+  it('visitante adelante', () => expect(timeDiffLabel(120)).toBe('Vas 7 h adelante de mí'));
+  it('visitante detrás', () => expect(timeDiffLabel(-360)).toBe('Vas 1 h detrás de mí'));
+  it('medias horas', () => expect(timeDiffLabel(330)).toBe('Vas 10 h 30 min adelante de mí'));
+});
+
+describe('cityFromTz', () => {
+  it('toma la última parte y cambia _ por espacio', () => expect(cityFromTz('America/Mexico_City')).toBe('Mexico City'));
+  it('vacío → "tu ciudad"', () => expect(cityFromTz('')).toBe('tu ciudad'));
 });
