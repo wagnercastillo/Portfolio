@@ -1,4 +1,5 @@
 import { HeroPhotos } from './HeroPhotos';
+import { HeroParallax } from './HeroParallax';
 import type { Perfil } from '@/lib/content';
 
 const WORDS = ['Software', 'que', 'funciona', 'en'];
@@ -7,9 +8,10 @@ const v = (name: string, n: number) => ({ [name]: n }) as React.CSSProperties;
 export function Hero({ perfil, total }: { perfil: Perfil; total: number }) {
   return (
     <section id="top" className="grid">
+      <HeroParallax />
       <div className="card hero span2 spot">
         <div className="badge"><span className="dot" />Disponible para proyectos · {perfil.ubicacion}</div>
-        <div>
+        <div className="px-text">
           <h1 aria-label={`${WORDS.join(' ')} producción.`}>
             {WORDS.map((w, i) => (
               <span key={w} aria-hidden="true"><span className="w"><span style={v('--i', i)}>{w}</span></span>{' '}</span>
@@ -18,7 +20,7 @@ export function Hero({ perfil, total }: { perfil: Perfil; total: number }) {
           </h1>
           <p className="hero-bio">{perfil.bio}</p>
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+        <div className="px-cta" style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
           <a href="#proyectos" className="btn btn-accent magnet">Ver proyectos <span className="arr">→</span></a>
           <a href="#contacto" className="btn btn-soft magnet">Contactar</a>
         </div>
