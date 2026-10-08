@@ -55,3 +55,10 @@ export function activeSection(sections: { id: string; top: number }[], line: num
   const passed = sections.filter((s) => s.top <= line).sort((a, b) => b.top - a.top);
   return passed[0]?.id ?? null;
 }
+
+/** Posición del viajero de la línea de tiempo: de la primera a la última estación según p (0 → 1). */
+export const travelerX = (p: number, centers: number[]) =>
+  centers.length ? centers[0] + p * (centers[centers.length - 1] - centers[0]) : 0;
+
+/** Estaciones ya alcanzadas por el viajero (con medio píxel de tolerancia). */
+export const litCount = (x: number, centers: number[]) => centers.filter((c) => c <= x + 0.5).length;

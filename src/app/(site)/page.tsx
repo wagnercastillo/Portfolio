@@ -24,7 +24,7 @@ export default async function Home() {
       <Marquee items={tech} />
       <FeaturedProjects projects={featured(projects)} />
       <ProjectGrid projects={cards} bodies={bodies} />
-      <Timeline projects={projects} />
+      <Timeline projects={projects} foto={perfil.foto} />
       <Experience perfil={perfil} />
       <StackSection habilidades={perfil.habilidades} projects={projects} />
       <Contact perfil={perfil} />

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ridge, dots, progress, activeSection } from './scene';
+import { ridge, dots, progress, activeSection, travelerX, litCount } from './scene';
 
 describe('ridge', () => {
   const opts = { base: 260, amp: 90, points: 24 };
@@ -56,4 +56,20 @@ describe('activeSection', () => {
     expect(activeSection(s, 9999)).toBe('stack');
   });
   it('tolera orden desordenado', () => expect(activeSection([s[2], s[0], s[1]], 3500)).toBe('experiencia'));
+});
+
+describe('travelerX / litCount (línea de tiempo)', () => {
+  const centers = [100, 400, 700, 1000];
+  it('el viajero va de la primera a la última estación', () => {
+    expect(travelerX(0, centers)).toBe(100);
+    expect(travelerX(0.5, centers)).toBe(550);
+    expect(travelerX(1, centers)).toBe(1000);
+  });
+  it('sin estaciones → 0', () => expect(travelerX(0.5, [])).toBe(0));
+  it('cuenta las estaciones alcanzadas', () => {
+    expect(litCount(100, centers)).toBe(1);
+    expect(litCount(550, centers)).toBe(2);
+    expect(litCount(1000, centers)).toBe(4);
+    expect(litCount(50, centers)).toBe(0);
+  });
 });
