@@ -84,19 +84,6 @@ h1, h2, h3 { margin: 0; letter-spacing: -.03em; }
 .stat.acc { background: var(--accent); color: var(--on-accent); }
 .stat.acc .label { color: inherit; opacity: .75; }
 .hero-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-
-/* parallax del hero: --p (0 → 1) lo publica HeroParallax; cada capa a su velocidad */
-#top { --p: 0; }
-#top .hero { scale: calc(1 - var(--p) * .04); transform-origin: 50% 0; }
-#top .hero .badge { transform: translate3d(0, calc(var(--p) * -70px), 0); opacity: calc(1 - var(--p) * 1.8); }
-.px-text { transform: translate3d(0, calc(var(--p) * -150px), 0); opacity: calc(1 - var(--p) * 1.4); will-change: transform, opacity; }
-.px-cta { transform: translate3d(0, calc(var(--p) * -60px), 0); opacity: calc(1 - var(--p) * 1.1); }
-#top .hero-side { transform: translate3d(0, calc(var(--p) * 110px), 0); will-change: transform; }
-#top .hero-stats { transform: translate3d(0, calc(var(--p) * -70px), 0); }
-#top .photo img.on { scale: calc(1 + var(--p) * .18); }
-@media (prefers-reduced-motion: reduce) {
-  #top .hero, #top .hero .badge, .px-text, .px-cta, #top .hero-side, #top .hero-stats, #top .photo img.on { transform: none; scale: none; opacity: 1; }
-}
 .hero-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .hero-stats .stat { padding: 22px; }
 .hero-stats .big { font-size: 64px; }
