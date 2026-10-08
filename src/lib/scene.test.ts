@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ridge, dots, progress } from './scene';
+import { ridge, dots, progress, activeSection } from './scene';
 
 describe('ridge', () => {
   const opts = { base: 260, amp: 90, points: 24 };
@@ -12,8 +12,11 @@ describe('ridge', () => {
     expect(d.startsWith('M0,400 L0,')).toBe(true);
     expect(d.endsWith('L1440,400 Z')).toBe(true);
   });
+  it('usa curvas suaves (Q), no picos rectos', () => {
+    expect(ridge(4, opts)).toMatch(/ Q[\d.]+,[\d.]+ [\d.]+,[\d.]+/);
+  });
   it('todas las alturas quedan dentro del viewBox', () => {
-    const ys = [...ridge(5, { base: 40, amp: 200, points: 30 }).matchAll(/L[\d.]+,([\d.]+)/g)].map((m) => Number(m[1]));
+    const ys = [...ridge(5, { base: 40, amp: 200, points: 30 }).matchAll(/[\d.]+,([\d.]+)/g)].map((m) => Number(m[1]));
     expect(Math.min(...ys)).toBeGreaterThanOrEqual(0);
     expect(Math.max(...ys)).toBeLessThanOrEqual(400);
   });
@@ -41,4 +44,16 @@ describe('progress', () => {
     expect(progress(200, 1800, 900)).toBe(0);
   });
   it('sin recorrido → 0', () => expect(progress(-10, 900, 900)).toBe(0));
+});
+
+
+describe('activeSection', () => {
+  const s = [{ id: 'proyectos', top: 900 }, { id: 'experiencia', top: 3000 }, { id: 'stack', top: 4200 }];
+  it('ninguna antes de la primera', () => expect(activeSection(s, 500)).toBeNull());
+  it('la última cuyo inicio ya pasó la línea', () => {
+    expect(activeSection(s, 900)).toBe('proyectos');
+    expect(activeSection(s, 3500)).toBe('experiencia');
+    expect(activeSection(s, 9999)).toBe('stack');
+  });
+  it('tolera orden desordenado', () => expect(activeSection([s[2], s[0], s[1]], 3500)).toBe('experiencia'));
 });

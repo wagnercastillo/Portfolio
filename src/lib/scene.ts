@@ -18,14 +18,20 @@ const r1 = (n: number) => Math.round(n * 10) / 10;
 /** Silueta de cordillera como path SVG cerrado en un viewBox 1440×400. */
 export function ridge(seed: number, { base, amp, points }: { base: number; amp: number; points: number }) {
   const rand = rng(seed);
-  const pts: string[] = [];
+  const pts: [number, number][] = [];
   let drift = 0;
   for (let i = 0; i <= points; i++) {
     drift = drift * 0.55 + (rand() - 0.5) * 1.4; // picos encadenados, no ruido puro
     const y = Math.min(Math.max(base - Math.abs(drift) * amp - rand() * amp * 0.35, 0), H);
-    pts.push(`L${r1((i / points) * W)},${r1(y)}`);
+    pts.push([r1((i / points) * W), r1(y)]);
   }
-  return `M0,${H} L0,${pts[0].split(',')[1]} ${pts.join(' ')} L${W},${H} Z`;
+  // curva suave: cada pico es punto de control y la curva pasa por los puntos medios
+  const curve = pts.slice(1, -1).map(([x, y], i) => {
+    const [nx, ny] = pts[i + 2];
+    return `Q${x},${y} ${r1((x + nx) / 2)},${r1((y + ny) / 2)}`;
+  });
+  const [lx, ly] = pts[pts.length - 1];
+  return `M0,${H} L0,${pts[0][1]} ${curve.join(' ')} L${lx},${ly} L${W},${H} Z`;
 }
 
 /** Puntos de luz (estrellas o ciudad) como lista de box-shadow en vw/vh. */
@@ -42,4 +48,10 @@ export function dots(seed: number, count: number, { yMin, yMax, size, colors }: 
 export function progress(top: number, height: number, viewport: number) {
   const travel = height - viewport;
   return travel > 0 ? Math.min(Math.max(-top / travel, 0), 1) : 0;
+}
+
+/** Sección activa para el navbar: la última cuyo inicio (top absoluto) ya pasó `line`. */
+export function activeSection(sections: { id: string; top: number }[], line: number) {
+  const passed = sections.filter((s) => s.top <= line).sort((a, b) => b.top - a.top);
+  return passed[0]?.id ?? null;
 }
