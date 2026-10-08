@@ -2,6 +2,7 @@ import { getPerfil, getProject, getProjects } from '@/lib/content';
 import { stackIcons } from '@/lib/tech-icons';
 import { featured } from '@/lib/projects';
 import { Hero } from '@/components/Hero';
+import { IntroScene } from '@/components/IntroScene';
 import { Marquee } from '@/components/Marquee';
 import { FeaturedProjects } from '@/components/FeaturedProjects';
 import { ProjectGrid } from '@/components/ProjectGrid';
@@ -18,6 +19,7 @@ export default async function Home() {
   const tech = perfil.habilidades.filter((h) => !/blandas/i.test(h.grupo)).flatMap((h) => h.items);
   return (
     <main style={{ display: 'contents' }}>
+      <IntroScene nombre={perfil.nombre} rol={perfil.rol} ubicacion={perfil.ubicacion} />
       <Hero perfil={perfil} total={projects.length} />
       <Marquee items={tech} />
       <FeaturedProjects projects={featured(projects)} />

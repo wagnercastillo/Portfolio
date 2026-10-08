@@ -65,6 +65,40 @@ h1, h2, h3 { margin: 0; letter-spacing: -.03em; }
 :root[data-theme='dark'] .theme-btn .sun { display: none; }
 :root[data-theme='dark'] .theme-btn .moon { display: block; }
 
+/* escena de entrada "Loja de noche": --p scroll (0→1), --mx/--my mouse (-1→1) */
+.intro { --p: 0; --mx: 0; --my: 0; position: relative; height: 210vh; margin: -104px calc(50% - 50vw) 0; }
+.intro-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #070b1a; }
+.intro-stage > * { position: absolute; will-change: transform; }
+.in-sky { inset: 0; background: radial-gradient(120% 70% at 70% 0%, #1d2a5c 0%, transparent 60%), linear-gradient(180deg, #060915 0%, #0f1736 45%, #2a2552 68%, #3b2a4d 80%, #10132b 100%); }
+.in-stars { top: 0; left: 0; width: 1px; height: 1px; border-radius: 50%; background: transparent; }
+.s1 { transform: translate3d(calc(var(--mx) * -4px), calc(var(--p) * -30px + var(--my) * -4px), 0); animation: twinkle 5s ease-in-out infinite; }
+.s2 { transform: translate3d(calc(var(--mx) * -9px), calc(var(--p) * -60px + var(--my) * -7px), 0); animation: twinkle 3.6s ease-in-out infinite .8s; }
+.s3 { transform: translate3d(calc(var(--mx) * -14px), calc(var(--p) * -90px + var(--my) * -10px), 0); animation: twinkle 2.7s ease-in-out infinite 1.6s; }
+@keyframes twinkle { 50% { opacity: .45; } }
+.in-moon { top: 12vh; right: 14vw; width: 9vmin; height: 9vmin; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fffbe8, #f3e7b8 60%, #d9c98f); box-shadow: 0 0 60px 18px rgba(255, 240, 190, .18); transform: translate3d(calc(var(--mx) * -10px), calc(var(--p) * -50px + var(--my) * -8px), 0); }
+.in-layer { left: -3vw; width: 106vw; bottom: 0; }
+.in-back { height: 60vh; fill: #1e2550; transform: translate3d(calc(var(--mx) * -16px), calc(var(--p) * -70px + var(--my) * -8px), 0); }
+.in-mid { height: 48vh; fill: #121a3a; transform: translate3d(calc(var(--mx) * -28px), calc(var(--p) * -150px + var(--my) * -12px), 0); }
+.in-city { top: 0; left: 0; width: 1px; height: 1px; border-radius: 50%; filter: blur(.4px); transform: translate3d(calc(var(--mx) * -28px), calc(var(--p) * -150px + var(--my) * -12px), 0); animation: twinkle 4s ease-in-out infinite; }
+/* el frente es un "suelo" alto: cresta arriba + relleno sólido; al subir tapa el nombre y la escena */
+.in-front { left: -3vw; width: 106vw; top: 64vh; height: 150vh; display: flex; flex-direction: column; transform: translate3d(calc(var(--mx) * -55px), calc(var(--p) * -66vh + var(--my) * -16px), 0); }
+.in-front svg { display: block; width: 100%; height: 36vh; fill: #070915; flex: none; margin-bottom: -1px; }
+.in-ground { display: block; flex: 1; background: linear-gradient(#070915 0%, #070915 40%, var(--bg) 100%); }
+.in-name { inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 20px 14vh; text-align: center; color: #fff; pointer-events: none;
+  transform: translate3d(calc(var(--mx) * -36px), calc(var(--p) * 18vh + var(--my) * -14px), 0) scale(calc(1 - var(--p) * .12)); opacity: calc(1 - var(--p) * .9); }
+.in-name p { margin: 0; font: 800 clamp(56px, 13vw, 210px)/.86 var(--display); letter-spacing: -.05em; text-shadow: 0 10px 60px rgba(120, 140, 255, .35); }
+.in-kicker, .in-place { font: 500 clamp(11px, 1.2vw, 14px) var(--mono); letter-spacing: .2em; text-transform: uppercase; color: rgba(255, 255, 255, .7); }
+.in-kicker { margin-bottom: 18px; max-width: 34ch; line-height: 1.6; text-wrap: balance; }
+.in-place { margin-top: 20px; color: #ffcf70; }
+.in-fog { left: 0; right: 0; bottom: 0; height: 22vh; background: linear-gradient(transparent, var(--bg)); opacity: calc(var(--p) * 1.4); }
+.in-hint { left: 50%; bottom: 5vh; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 6px; color: rgba(255, 255, 255, .8); font: 500 12px var(--mono); letter-spacing: .2em; text-transform: uppercase; text-decoration: none; opacity: calc(1 - var(--p) * 5); }
+.in-hint span { font-size: 18px; animation: bob 1.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .intro { height: 100vh; }
+  .intro-stage > * { transform: none !important; opacity: 1; }
+  .in-fog { opacity: 1; }
+}
+
 /* hero */
 .hero { padding: clamp(28px, 4vw, 56px); display: flex; flex-direction: column; justify-content: space-between; gap: 40px; min-height: 480px; }
 .badge { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--ok-bg); color: var(--ok-fg); font: 500 13px var(--mono); }
