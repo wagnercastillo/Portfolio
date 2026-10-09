@@ -59,7 +59,7 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
           <span className="in-kicker">{rol}</span>
           <p aria-label={nombre}>
             {words.map((w, wi) => (
-              <span key={wi} className="in-word" aria-hidden="true">
+              <span key={wi} className={`in-word${wi > 0 ? ' it' : ''}`} aria-hidden="true">
                 {[...w].map((ch, ci) => <span key={ci} className="in-ch" style={{ '--i': n++ } as React.CSSProperties}>{ch}</span>)}
               </span>
             ))}
