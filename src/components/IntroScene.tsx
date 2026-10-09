@@ -24,21 +24,13 @@ const SHOOTING = [
   rotate: `${((Math.atan2(s.dy, s.dx) * 180) / Math.PI).toFixed(1)}deg`,
   animationDuration: `${s.dur}s`, animationDelay: `${s.delay}s`,
 }) as React.CSSProperties);
-// día: tejados de teja y casas blancas en el valle (mismas zonas que las luces de noche)
-const ROOFS = cityLights(23, 460, { yMin: 79, yMax: 88, spread: 22, size: [0.6, 1.4], colors: ['#c4563a', '#d9785a', '#b84a2e', '#f4f0e8', '#e8dcc4', '#efe6d6'] });
-// nubes: posición, tamaño y velocidad de deriva distintos
+// atardecer: franjas finas de nube (estratos) iluminadas desde abajo
 const CLOUDS = [
-  { top: '16vh', left: '6vw', width: '22vw', '--drift': '58s', '--o': 0.95 },
-  { top: '30vh', left: '64vw', width: '26vw', '--drift': '72s', '--o': 0.85 },
-  { top: '9vh', left: '40vw', width: '16vw', '--drift': '64s', '--o': 0.7 },
-  { top: '42vh', left: '-4vw', width: '20vw', '--drift': '80s', '--o': 0.6 },
+  { top: '24vh', left: '-8vw', width: '58vw', height: '1.6vh', '--drift': '70s', '--o': 0.75 },
+  { top: '31vh', left: '38vw', width: '70vw', height: '2.2vh', '--drift': '90s', '--o': 0.6 },
+  { top: '38vh', left: '6vw', width: '46vw', height: '1.2vh', '--drift': '80s', '--o': 0.5 },
+  { top: '17vh', left: '55vw', width: '40vw', height: '1vh', '--drift': '100s', '--o': 0.35 },
 ].map((c) => c as React.CSSProperties);
-// pájaros: cruzan el cielo a distinta altura y ritmo
-const BIRDS = [
-  { top: '22vh', '--fly': '26s', '--delay': '0s', '--s': 1 },
-  { top: '25vh', '--fly': '26s', '--delay': '.6s', '--s': 0.8 },
-  { top: '14vh', '--fly': '34s', '--delay': '9s', '--s': 0.9 },
-].map((b) => b as React.CSSProperties);
 const FLOOR = ridge(34, { base: 120, amp: 28, points: 14 }); // suelo del valle donde se asienta la ciudad
 const BACK = ridge(31, { base: 230, amp: 120, points: 18 });
 const MID = ridge(32, { base: 295, amp: 110, points: 26 });
@@ -73,18 +65,13 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
         <div className="in-milky night" aria-hidden="true" />
         <i className="in-stars s1 night" style={{ boxShadow: STARS[0] }} aria-hidden="true" />
         <i className="in-stars s2 night" style={{ boxShadow: STARS[1] }} aria-hidden="true" />
-        <i className="in-stars s3 night" style={{ boxShadow: STARS[2] }} aria-hidden="true" />
+        <i className="in-stars s3" style={{ boxShadow: STARS[2] }} aria-hidden="true" />
         {SHOOTING.map((style, i) => <i key={i} className="in-shoot night" style={style} aria-hidden="true" />)}
         <div className="in-moon night" aria-hidden="true" />
-        {/* día: sol, nubes y pájaros (se muestran solo en modo claro) */}
+        {/* atardecer (modo claro): sol bajo y franjas de nube */}
         <div className="in-sun day" aria-hidden="true" />
         <div className="in-clouds day" aria-hidden="true">
           {CLOUDS.map((c, i) => <i key={i} className="in-cloud" style={c} />)}
-        </div>
-        <div className="in-birds day" aria-hidden="true">
-          {BIRDS.map((b, i) => (
-            <svg key={i} className="in-bird" style={b} viewBox="0 0 24 10"><path d="M1 7 Q6 1 12 6 Q18 1 23 7" /></svg>
-          ))}
         </div>
         <svg className="in-layer in-back" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
           <Ridge layer="back" d={BACK} />
@@ -97,10 +84,9 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
           <svg className="in-floor" viewBox="0 0 1440 400" preserveAspectRatio="none">
             <Ridge layer="floor" d={FLOOR} />
           </svg>
-          <i className="in-glow night" />
-          <i className="in-city night" style={{ boxShadow: CITY }} />
-          <i className="in-city bright night" style={{ boxShadow: CITY_BRIGHT }} />
-          <i className="in-city roofs day" style={{ boxShadow: ROOFS }} />
+          <i className="in-glow" />
+          <i className="in-city" style={{ boxShadow: CITY }} />
+          <i className="in-city bright" style={{ boxShadow: CITY_BRIGHT }} />
         </div>
         <div className="in-mist m2" aria-hidden="true" />
         <div className="in-name">
