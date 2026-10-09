@@ -2,7 +2,10 @@ import 'server-only';
 import * as si from 'simple-icons';
 import { brandColor } from './projects';
 
-export interface TechIcon { d: string; kind: 'fill' | 'stroke'; color: string | null }
+import type { SpriteSymbol } from './sprite';
+
+/** Referencia ligera a un ícono del sprite /icons.svg (el dibujo no viaja en el HTML). */
+export interface TechIcon { id: string; color: string | null }
 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
@@ -31,12 +34,25 @@ const all = Object.values(si).filter((i): i is si.SimpleIcon => typeof (i as si.
 const bySlug = new Map(all.map((i) => [i.slug, i]));
 const byTitle = new Map(all.map((i) => [norm(i.title), i]));
 
-export function techIcon(name: string): TechIcon {
+function resolve(name: string): SpriteSymbol & { color: string | null } {
   const n = norm(name.normalize('NFD').replace(/[̀-ͯ]/g, ''));
-  if (GENERIC[n]) return { d: GENERIC[n], kind: 'stroke', color: null };
+  if (GENERIC[n]) return { id: `g-${n}`, kind: 'stroke', d: GENERIC[n], color: null };
   const icon = (SLUGS[n] && bySlug.get(SLUGS[n])) || byTitle.get(n);
-  return icon ? { d: icon.path, kind: 'fill', color: brandColor(icon.hex) } : { d: FALLBACK, kind: 'stroke', color: null };
+  return icon
+    ? { id: icon.slug, kind: 'fill', d: icon.path, color: brandColor(icon.hex) }
+    : { id: 'g-code', kind: 'stroke', d: FALLBACK, color: null };
 }
+
+export function techIcon(name: string): TechIcon {
+  const { id, color } = resolve(name);
+  return { id, color };
+}
+
+/** Símbolos para el sprite: un dibujo por tecnología usada en el sitio. */
+export const spriteSymbols = (names: string[]): SpriteSymbol[] => names.map((n) => {
+  const { id, kind, d } = resolve(n);
+  return { id, kind, d };
+});
 
 export interface IconRef { name: string; icon: TechIcon }
 

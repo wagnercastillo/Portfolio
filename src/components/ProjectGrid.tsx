@@ -34,7 +34,7 @@ export function ProjectGrid({ projects, bodies }: { projects: CardProject[]; bod
     <section aria-labelledby="todos" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div className="section-head">
         <h2 id="todos" className="section-title reveal scramble">Todos los proyectos</h2>
-        <div className="filters" role="group" aria-label="Filtrar por categoría">
+        <div className={`filters${pill.width ? ' ready' : ''}`} role="group" aria-label="Filtrar por categoría">
           <span className="pill" style={{ left: pill.left, width: pill.width }} />
           {chips.map((c) => (
             <button key={c} ref={(el) => { btns.current[c] = el; }} type="button" aria-pressed={cat === c} onClick={() => pick(c)}>

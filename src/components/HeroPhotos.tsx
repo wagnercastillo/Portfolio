@@ -8,6 +8,9 @@ const FOCUS: Record<string, string> = { arriba: '50% 22%', centro: '50% 55%', ab
 export function HeroPhotos({ photos, nombre, ubicacion }: { photos: { imagen: string; enfoque: string }[]; nombre: string; ubicacion: string }) {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
+  // las demás fotos se montan a los 3 s (antes del primer cambio a los 6 s): no compiten con la carga inicial
+  const [warm, setWarm] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setWarm(true), 3000); return () => clearTimeout(t); }, []);
   const many = photos.length > 1;
 
   useEffect(() => {
@@ -16,13 +19,13 @@ export function HeroPhotos({ photos, nombre, ubicacion }: { photos: { imagen: st
     return () => clearInterval(id);
   }, [many, paused, photos.length]);
 
-  const next = () => many && setI((n) => (n + 1) % photos.length);
+  const next = () => { if (!many) return; setWarm(true); setI((n) => (n + 1) % photos.length); };
 
   return (
     <figure className="card photo tilt reveal" style={{ '--d': 1 } as React.CSSProperties}
       onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      {photos.map((p, k) => (
-        <Image key={p.imagen} src={p.imagen} alt={k === i ? `Foto de ${nombre}` : ''} fill priority={k === 0}
+      {photos.map((p, k) => (k === 0 || warm) && (
+        <Image key={p.imagen} src={p.imagen} alt={k === i ? `Foto de ${nombre}` : ''} fill
           sizes="(min-width: 1024px) 420px, 100vw" className={k === i ? 'on' : ''}
           style={{ objectPosition: FOCUS[p.enfoque] ?? FOCUS.centro }} />
       ))}

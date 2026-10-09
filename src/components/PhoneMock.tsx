@@ -21,7 +21,7 @@ export function PhoneMock({ message, typing, sent, foto, nombre, ubicacion, time
         <div className="wa-msg in"><p>¡Hola! Cuéntame qué quieres construir.</p></div>
         <div className={`wa-msg out${sent ? ' sent' : ''}`} key={typing ? 'typing' : message}>
           {typing ? (
-            <span className="typing" aria-label="Escribiendo"><i /><i /><i /></span>
+            <span className="typing" role="img" aria-label="Escribiendo"><i /><i /><i /></span>
           ) : (
             <>
               <p>{message}</p>

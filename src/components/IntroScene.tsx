@@ -91,7 +91,8 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
         <div className="in-mist m2" aria-hidden="true" />
         <div className="in-name">
           <span className="in-kicker">{rol}</span>
-          <p aria-label={nombre}>
+          <p>
+            <span className="sr-only">{nombre}</span>
             {words.map((w, wi) => (
               <span key={wi} className="in-word" aria-hidden="true">
                 {[...w].map((ch, ci) => <span key={ci} className="in-ch" style={{ '--i': n++ } as React.CSSProperties}>{ch}</span>)}
@@ -107,7 +108,6 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
           <i className="in-ground" />
         </div>
         <div className="in-fog" aria-hidden="true" />
-        <div className="in-grain" aria-hidden="true" />
         <a href="#top" className="in-hint">Desliza <span aria-hidden="true">↓</span></a>
       </div>
       <IntroMotion />

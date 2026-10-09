@@ -18,7 +18,7 @@ export function ContactChat({ foto, nombre }: { foto: string | null; nombre: str
       {foto && <Image src={foto} alt={`Foto de ${nombre}`} width={64} height={64} className="chat-avatar" />}
       <div className={`chat-bubble${seen ? ' on' : ''}`} aria-live="polite">
         {typing ? (
-          <span className="typing" aria-label={`${first} está escribiendo`}><i /><i /><i /></span>
+          <span className="typing" role="img" aria-label={`${first} está escribiendo`}><i /><i /><i /></span>
         ) : (
           <p>¡Hola! Soy {first}. Cuéntame qué quieres construir y te respondo personalmente, sin intermediarios.</p>
         )}

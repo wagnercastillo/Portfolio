@@ -81,7 +81,7 @@ export function StackExplorer({ items, groups, clientes }: { items: TechItem[]; 
       <div className="card span2 reveal" style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 id="stack-t" className="scramble" style={{ fontSize: 28, fontWeight: 800 }}>Stack</h2>
-          <div className="filters" role="group" aria-label="Filtrar tecnologías por grupo" style={{ background: 'var(--surface-2)' }}>
+          <div className={`filters${pill.width ? ' ready' : ''}`} role="group" aria-label="Filtrar tecnologías por grupo" style={{ background: 'var(--surface-2)' }}>
             <span className="pill" style={{ left: pill.left, width: pill.width }} />
             {tabs.map((g) => (
               <button key={g} ref={(el) => { btns.current[g] = el; }} type="button" aria-pressed={tab === g}
