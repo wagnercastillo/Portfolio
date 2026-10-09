@@ -9,6 +9,18 @@ const STARS = [
 ];
 const CITY = cityLights(21, 520, { yMin: 79, yMax: 88, spread: 22, size: [0.4, 1.1], colors: ['#ffcf70', '#ffb347', '#fff1c2', '#ffd98a', '#ffa64d', '#ffe6a8'] });
 const CITY_BRIGHT = cityLights(22, 45, { yMin: 80, yMax: 87, spread: 16, size: [1.2, 1.9], colors: ['#fff4d6', '#ffcf70'] });
+// estrellas fugaces en zonas libres del cielo (lejos del nombre); dx/dy en vw, la estela se orienta a su movimiento
+const SHOOTING = [
+  { top: 13, left: 2, dx: 18, dy: 8, len: 170, dur: 11, delay: 3 },
+  { top: 11, left: 60, dx: 14, dy: 5, len: 150, dur: 13, delay: 6.5 },
+  { top: 40, left: 86, dx: 10, dy: 4, len: 130, dur: 9.5, delay: 9 },
+  { top: 30, left: 0, dx: 10, dy: 4.5, len: 140, dur: 15, delay: 1.2 },
+  { top: 11, left: 33, dx: 10, dy: 2.5, len: 120, dur: 17, delay: 12 },
+].map((s) => ({
+  top: `${s.top}vh`, left: `${s.left}vw`, '--dx': `${s.dx}vw`, '--dy': `${s.dy}vw`, width: s.len,
+  rotate: `${((Math.atan2(s.dy, s.dx) * 180) / Math.PI).toFixed(1)}deg`,
+  animationDuration: `${s.dur}s`, animationDelay: `${s.delay}s`,
+}) as React.CSSProperties);
 const FLOOR = ridge(34, { base: 120, amp: 28, points: 14 }); // suelo del valle donde se asienta la ciudad
 const BACK = ridge(31, { base: 230, amp: 120, points: 18 });
 const MID = ridge(32, { base: 295, amp: 110, points: 26 });
@@ -41,7 +53,7 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
         <i className="in-stars s1" style={{ boxShadow: STARS[0] }} aria-hidden="true" />
         <i className="in-stars s2" style={{ boxShadow: STARS[1] }} aria-hidden="true" />
         <i className="in-stars s3" style={{ boxShadow: STARS[2] }} aria-hidden="true" />
-        <i className="in-shoot" aria-hidden="true" />
+        {SHOOTING.map((style, i) => <i key={i} className="in-shoot" style={style} aria-hidden="true" />)}
         <div className="in-moon" aria-hidden="true" />
         <svg className="in-layer in-back" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
           <Ridge id="r-back" d={BACK} top="#2e3a78" bottom="#161c42" rim="rgba(190,205,255,.35)" />
