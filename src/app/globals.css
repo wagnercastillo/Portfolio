@@ -116,13 +116,11 @@ html { overflow-x: clip; } /* la escena usa 100vw (incluye la barra vertical): s
 .in-city.bright { filter: drop-shadow(0 0 4px #ffcf70); animation-duration: 3s; animation-delay: 1s; }
 .in-name { inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 20px 16vh; text-align: center; color: #fff; pointer-events: none;
   transform: translate3d(calc(var(--mx) * -36px), calc(var(--p) * 18vh + var(--my) * -14px), 0) scale(calc(1 - var(--p) * .12)); opacity: calc(1 - var(--p) * .9); }
-.in-name p { margin: 0; display: flex; flex-direction: column; align-items: center; font: 400 clamp(68px, 14vw, 236px)/.86 var(--font-serif), Georgia, serif; letter-spacing: -.02em; filter: drop-shadow(0 12px 50px rgba(110, 130, 255, .35)); }
+.in-name p { margin: 0; display: flex; flex-direction: column; align-items: center; font: 800 clamp(44px, 9.6vw, 164px)/.98 var(--font-intro), var(--display); letter-spacing: -.04em; filter: drop-shadow(0 12px 50px rgba(110, 130, 255, .35)); }
 .in-word { display: block; white-space: nowrap; }
-.in-word.it { font-style: italic; }
-.in-word.it .in-ch { padding-right: .06em; margin-right: -.06em; } /* que el degradado no corte la inclinación de la itálica */
 .in-ch { display: inline-block; background: linear-gradient(180deg, #ffffff 35%, #c3ceff 80%, #9fb0ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; animation: ch-rise 1s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i) * 45ms + 250ms); }
 @keyframes ch-rise { from { opacity: 0; transform: translateY(60%) rotate(4deg); filter: blur(8px); } }
-.in-kicker, .in-place { font: 500 clamp(11px, 1.15vw, 14px) var(--font-mono-thin), var(--mono); letter-spacing: .24em; text-transform: uppercase; color: rgba(225, 232, 255, .72); animation: fade 1s 1.2s both; }
+.in-kicker, .in-place { font: 500 clamp(11px, 1.15vw, 14px) var(--mono); letter-spacing: .24em; text-transform: uppercase; color: rgba(225, 232, 255, .72); animation: fade 1s 1.2s both; }
 .in-kicker { margin-bottom: 22px; max-width: 34ch; line-height: 1.6; text-wrap: balance; }
 .in-place { margin-top: 24px; color: #ffcf70; display: inline-flex; align-items: center; gap: 10px; }
 .in-place::before, .in-place::after { content: ''; width: 36px; height: 1px; background: currentColor; opacity: .6; }
