@@ -113,7 +113,8 @@ html { overflow-x: clip; } /* la escena usa 100vw (incluye la barra vertical): s
 .m2::before { animation-duration: 28s; animation-direction: alternate-reverse; }
 @keyframes drift { from { translate: -6vw 0; } to { translate: 6vw 0; } }
 .in-valley { inset: 0; transform: translate3d(calc(var(--mx) * -30px), calc(var(--p) * -160px + var(--my) * -12px), 0); }
-.in-glow { position: absolute; left: 0; right: 0; top: 68vh; height: 20vh; background: radial-gradient(60% 55% at 50% 62%, rgba(255, 170, 80, .3), rgba(255, 140, 60, .1) 50%, transparent 75%); filter: blur(10px); }
+.in-floor { position: absolute; left: -3vw; width: 106vw; bottom: 0; height: 30vh; }
+.in-glow { position: absolute; left: 0; right: 0; top: 72vh; height: 20vh; background: radial-gradient(60% 55% at 50% 62%, rgba(255, 170, 80, .3), rgba(255, 140, 60, .1) 50%, transparent 75%); filter: blur(10px); }
 .in-city { position: absolute; top: 0; left: 0; width: 1px; height: 1px; border-radius: 50%; animation: twinkle 4.5s ease-in-out infinite; }
 .in-city.bright { filter: drop-shadow(0 0 4px #ffcf70); animation-duration: 3s; animation-delay: 1s; }
 .in-name { inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 20px 16vh; text-align: center; color: #fff; pointer-events: none;

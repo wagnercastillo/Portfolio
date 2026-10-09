@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ridge, dots, progress, activeSection, travelerX, litCount } from './scene';
+import { ridge, dots, progress, activeSection, travelerX, litCount, cityLights } from './scene';
 
 describe('ridge', () => {
   const opts = { base: 260, amp: 90, points: 24 };
@@ -71,5 +71,27 @@ describe('travelerX / litCount (línea de tiempo)', () => {
     expect(litCount(550, centers)).toBe(2);
     expect(litCount(1000, centers)).toBe(4);
     expect(litCount(50, centers)).toBe(0);
+  });
+});
+
+describe('cityLights', () => {
+  const opts = { yMin: 79, yMax: 88, spread: 22, size: [0.5, 1.2] as [number, number], colors: ['#ffcf70'] };
+  const pts = (s: string) => [...s.matchAll(/([\d.]+)vw ([\d.]+)vh/g)].map((m) => [Number(m[1]), Number(m[2])]);
+  it('determinista y con N luces', () => {
+    const s = cityLights(5, 300, opts);
+    expect(s).toBe(cityLights(5, 300, opts));
+    expect(pts(s)).toHaveLength(300);
+  });
+  it('todas dentro del ancho y de la franja del valle', () => {
+    for (const [x, y] of pts(cityLights(6, 400, opts))) {
+      expect(x).toBeGreaterThanOrEqual(0); expect(x).toBeLessThanOrEqual(100);
+      expect(y).toBeGreaterThanOrEqual(79); expect(y).toBeLessThanOrEqual(88);
+    }
+  });
+  it('se agrupan en el centro como una ciudad (más densas al medio que en los bordes)', () => {
+    const xs = pts(cityLights(7, 600, opts)).map(([x]) => x);
+    const center = xs.filter((x) => x > 35 && x < 65).length;
+    const edges = xs.filter((x) => x < 15 || x > 85).length;
+    expect(center).toBeGreaterThan(edges * 3);
   });
 });

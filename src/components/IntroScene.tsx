@@ -1,4 +1,4 @@
-import { dots, ridge } from '@/lib/scene';
+import { cityLights, dots, ridge } from '@/lib/scene';
 import { IntroMotion } from './IntroMotion';
 
 // Escena fija: se genera en el servidor (determinista) y solo se anima con variables CSS.
@@ -7,8 +7,9 @@ const STARS = [
   dots(12, 45, { yMin: 0, yMax: 55, size: [0.7, 1.2], colors: ['#ffffff', '#ffe9b0'] }),
   dots(13, 16, { yMin: 2, yMax: 45, size: [1.1, 1.7], colors: ['#ffffff'] }),
 ];
-const CITY = dots(21, 420, { yMin: 74, yMax: 84, size: [0.5, 1.4], colors: ['#ffcf70', '#ffb347', '#fff1c2', '#ffd98a', '#ffa64d', '#9fd3ff'] });
-const CITY_BRIGHT = dots(22, 40, { yMin: 75, yMax: 83, size: [1.4, 2.2], colors: ['#fff4d6', '#ffcf70'] });
+const CITY = cityLights(21, 520, { yMin: 79, yMax: 88, spread: 22, size: [0.4, 1.1], colors: ['#ffcf70', '#ffb347', '#fff1c2', '#ffd98a', '#ffa64d', '#ffe6a8'] });
+const CITY_BRIGHT = cityLights(22, 45, { yMin: 80, yMax: 87, spread: 16, size: [1.2, 1.9], colors: ['#fff4d6', '#ffcf70'] });
+const FLOOR = ridge(34, { base: 120, amp: 28, points: 14 }); // suelo del valle donde se asienta la ciudad
 const BACK = ridge(31, { base: 230, amp: 120, points: 18 });
 const MID = ridge(32, { base: 295, amp: 110, points: 26 });
 const FRONT = ridge(33, { base: 340, amp: 80, points: 34 });
@@ -50,6 +51,9 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
           <Ridge id="r-mid" d={MID} top="#1d2552" bottom="#0c1129" rim="rgba(170,190,255,.25)" />
         </svg>
         <div className="in-valley" aria-hidden="true">
+          <svg className="in-floor" viewBox="0 0 1440 400" preserveAspectRatio="none">
+            <Ridge id="r-floor" d={FLOOR} top="#161c40" bottom="#0b0f24" rim="rgba(255,190,120,.12)" />
+          </svg>
           <i className="in-glow" />
           <i className="in-city" style={{ boxShadow: CITY }} />
           <i className="in-city bright" style={{ boxShadow: CITY_BRIGHT }} />

@@ -62,3 +62,23 @@ export const travelerX = (p: number, centers: number[]) =>
 
 /** Estaciones ya alcanzadas por el viajero (con medio píxel de tolerancia). */
 export const litCount = (x: number, centers: number[]) => centers.filter((c) => c <= x + 0.5).length;
+
+/**
+ * Luces de ciudad en el valle: agrupadas alrededor del centro (normal con desviación `spread` vw)
+ * y más concentradas hacia el medio de la franja vertical, como una ciudad vista desde un mirador.
+ */
+export function cityLights(seed: number, count: number, { yMin, yMax, spread, size, colors }: { yMin: number; yMax: number; spread: number; size: [number, number]; colors: string[] }) {
+  const rand = rng(seed);
+  const gauss = () => { // Box-Muller
+    const u = Math.max(rand(), 1e-9), v = rand();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  };
+  const mid = (yMin + yMax) / 2, half = (yMax - yMin) / 2;
+  const clamp = (n: number, a: number, b: number) => Math.min(Math.max(n, a), b);
+  return Array.from({ length: count }, () => {
+    const x = r1(clamp(50 + gauss() * spread, 0, 100));
+    const y = r1(clamp(mid + gauss() * half * 0.45, yMin, yMax));
+    const s = r1(size[0] + rand() * (size[1] - size[0]));
+    return `${x}vw ${y}vh 0 ${s}px ${colors[Math.floor(rand() * colors.length)]}`;
+  }).join(', ');
+}
