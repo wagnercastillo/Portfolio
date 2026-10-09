@@ -156,20 +156,22 @@ html { overflow-x: clip; } /* la escena usa 100vw (incluye la barra vertical): s
 :root:not([data-theme='dark']) .intro .day { display: block; }
 :root:not([data-theme='dark']) .intro {
   /* perspectiva atmosférica: lo lejano se funde con la luz, lo cercano es casi silueta */
-  --r-back-top: #c58479; --r-back-bottom: #9a6170; --r-back-rim: rgba(255, 214, 160, .7);
-  --r-mid-top: #7a4f68; --r-mid-bottom: #563752; --r-mid-rim: rgba(255, 200, 150, .45);
-  --r-floor-top: #44304e; --r-floor-bottom: #2e2139; --r-floor-rim: rgba(255, 190, 130, .35);
-  --r-front-top: #24182c; --r-front-bottom: #140d1a; --r-front-rim: rgba(255, 190, 140, .22);
-  --ground: #140d1a;
+  --r-back-top: #d9786a; --r-back-bottom: #9c4d6a; --r-back-rim: rgba(255, 226, 160, .95);
+  --r-mid-top: #7b3a6e; --r-mid-bottom: #4f2453; --r-mid-rim: rgba(255, 196, 120, .7);
+  --r-floor-top: #3d2050; --r-floor-bottom: #26143a; --r-floor-rim: rgba(255, 186, 110, .5);
+  --r-front-top: #1d1030; --r-front-bottom: #10081c; --r-front-rim: rgba(255, 180, 110, .35);
+  --ground: #10081c;
 }
-:root:not([data-theme='dark']) .intro-stage { background: #f2a65a; }
+:root:not([data-theme='dark']) .intro-stage { background: #f48a3c; }
 :root:not([data-theme='dark']) .in-sky { background:
-  radial-gradient(70% 45% at 84% 66%, rgba(255, 214, 140, .85), rgba(255, 160, 90, .35) 45%, transparent 70%),
-  linear-gradient(180deg, #2c2e58 0%, #4e3f73 22%, #8a5577 42%, #d0726a 60%, #f29a5c 74%, #ffcf8a 86%, #ffe2ad 100%); }
+  radial-gradient(30% 22% at 84% 64%, rgba(255, 246, 210, .95), rgba(255, 200, 110, .6) 45%, transparent 75%),
+  radial-gradient(120% 26% at 70% 66%, rgba(255, 196, 90, .85), rgba(255, 140, 60, .45) 40%, transparent 72%),
+  radial-gradient(90% 60% at 20% 20%, rgba(70, 40, 130, .45), transparent 70%),
+  linear-gradient(180deg, #17204f 0%, #34296a 16%, #6e3172 32%, #b23f6a 46%, #e5584a 58%, #f7813a 68%, #ffb04f 78%, #ffd27a 88%, #ffe3a3 100%); }
 :root:not([data-theme='dark']) .s3 { opacity: .35; filter: none; } /* primeras estrellas, arriba */
-:root:not([data-theme='dark']) .in-mist::before { background: radial-gradient(40% 50% at 25% 50%, rgba(255, 190, 150, .22), transparent 70%), radial-gradient(35% 45% at 70% 55%, rgba(255, 210, 170, .18), transparent 70%); }
+:root:not([data-theme='dark']) .in-mist::before { background: radial-gradient(40% 50% at 25% 50%, rgba(255, 170, 110, .22), transparent 70%), radial-gradient(35% 45% at 75% 55%, rgba(255, 200, 120, .26), transparent 70%); }
 :root:not([data-theme='dark']) .in-glow { opacity: .55; }
-:root:not([data-theme='dark']) .in-city { opacity: .55; }
+:root:not([data-theme='dark']) .in-city { opacity: .7; }
 :root:not([data-theme='dark']) .in-ch { background-image: linear-gradient(180deg, #fffaf2 30%, #ffe6c4 72%, #ffcf98 100%); }
 :root:not([data-theme='dark']) .in-name p { filter: drop-shadow(0 10px 40px rgba(90, 30, 50, .35)); }
 :root:not([data-theme='dark']) .in-kicker { color: rgba(255, 244, 232, .85); }
@@ -177,13 +179,13 @@ html { overflow-x: clip; } /* la escena usa 100vw (incluye la barra vertical): s
 :root:not([data-theme='dark']) .in-grain { opacity: .07; }
 /* sol bajo, sin rayos: disco suave con halo amplio que se oculta tras las montañas */
 .in-sun { top: 55vh; right: 9vw; width: 17vmin; height: 17vmin; border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, #fff6e0 0%, #ffe3a6 45%, #ffbf6a 75%, #ff9f55 100%);
-  box-shadow: 0 0 60px 20px rgba(255, 200, 120, .55), 0 0 200px 90px rgba(255, 160, 90, .3), 0 0 420px 220px rgba(255, 190, 130, .2);
+  background: radial-gradient(circle at 50% 50%, #fffdf3 0%, #fff0c4 40%, #ffd27a 72%, #ffad4d 100%);
+  box-shadow: 0 0 50px 22px rgba(255, 236, 170, .85), 0 0 160px 80px rgba(255, 180, 80, .55), 0 0 380px 200px rgba(255, 130, 60, .3);
   transform: translate3d(calc(var(--mx) * -8px), calc(var(--p) * 30px + var(--my) * -6px), 0); }
 /* franjas de nube (estratos) iluminadas desde abajo */
 .in-clouds { inset: 0; transform: translate3d(calc(var(--mx) * -12px), calc(var(--p) * -60px), 0); }
 .in-cloud { position: absolute; border-radius: 50%; opacity: var(--o); filter: blur(5px);
-  background: linear-gradient(180deg, rgba(255, 170, 150, .15), rgba(255, 200, 150, .9) 60%, rgba(255, 150, 110, .5)),
+  background: linear-gradient(180deg, rgba(120, 50, 110, .35), rgba(255, 150, 110, .95) 55%, rgba(255, 210, 140, .9) 75%, rgba(255, 120, 80, .55)),
     linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
   -webkit-mask: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent); mask: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
   animation: cloud var(--drift) ease-in-out infinite alternate; }
