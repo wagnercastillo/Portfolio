@@ -24,23 +24,41 @@ const SHOOTING = [
   rotate: `${((Math.atan2(s.dy, s.dx) * 180) / Math.PI).toFixed(1)}deg`,
   animationDuration: `${s.dur}s`, animationDelay: `${s.delay}s`,
 }) as React.CSSProperties);
+// día: tejados de teja y casas blancas en el valle (mismas zonas que las luces de noche)
+const ROOFS = cityLights(23, 460, { yMin: 79, yMax: 88, spread: 22, size: [0.6, 1.4], colors: ['#c4563a', '#d9785a', '#b84a2e', '#f4f0e8', '#e8dcc4', '#efe6d6'] });
+// nubes: posición, tamaño y velocidad de deriva distintos
+const CLOUDS = [
+  { top: '16vh', left: '6vw', width: '22vw', '--drift': '58s', '--o': 0.95 },
+  { top: '30vh', left: '64vw', width: '26vw', '--drift': '72s', '--o': 0.85 },
+  { top: '9vh', left: '40vw', width: '16vw', '--drift': '64s', '--o': 0.7 },
+  { top: '42vh', left: '-4vw', width: '20vw', '--drift': '80s', '--o': 0.6 },
+].map((c) => c as React.CSSProperties);
+// pájaros: cruzan el cielo a distinta altura y ritmo
+const BIRDS = [
+  { top: '22vh', '--fly': '26s', '--delay': '0s', '--s': 1 },
+  { top: '25vh', '--fly': '26s', '--delay': '.6s', '--s': 0.8 },
+  { top: '14vh', '--fly': '34s', '--delay': '9s', '--s': 0.9 },
+].map((b) => b as React.CSSProperties);
 const FLOOR = ridge(34, { base: 120, amp: 28, points: 14 }); // suelo del valle donde se asienta la ciudad
 const BACK = ridge(31, { base: 230, amp: 120, points: 18 });
 const MID = ridge(32, { base: 295, amp: 110, points: 26 });
 const FRONT = ridge(33, { base: 340, amp: 80, points: 34 });
 
-function Ridge({ id, d, top, bottom, rim }: { id: string; d: string; top: string; bottom: string; rim: string }) {
+// Colores por variables CSS (--r-<capa>-top/bottom/rim) para que día y noche tengan su paleta.
+// Van en `style` porque los atributos de presentación SVG no aceptan var().
+function Ridge({ layer, d }: { layer: 'back' | 'mid' | 'floor' | 'front'; d: string }) {
+  const id = `r-${layer}`;
   return (
     <>
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={top} />
-          <stop offset="1" stopColor={bottom} />
+          <stop offset="0" style={{ stopColor: `var(--r-${layer}-top)` }} />
+          <stop offset="1" style={{ stopColor: `var(--r-${layer}-bottom)` }} />
         </linearGradient>
       </defs>
       <path d={d} fill={`url(#${id})`} />
-      {/* borde iluminado por la luna */}
-      <path d={d} fill="none" stroke={rim} strokeWidth="1.4" vectorEffect="non-scaling-stroke" />
+      {/* borde iluminado (luna de noche, sol de día) */}
+      <path d={d} fill="none" style={{ stroke: `var(--r-${layer}-rim)` }} strokeWidth="1.4" vectorEffect="non-scaling-stroke" />
     </>
   );
 }
@@ -52,26 +70,37 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
     <section className="intro" aria-label={`Portada: ${nombre}, ${ubicacion}`}>
       <div className="intro-stage">
         <div className="in-sky" aria-hidden="true" />
-        <div className="in-milky" aria-hidden="true" />
-        <i className="in-stars s1" style={{ boxShadow: STARS[0] }} aria-hidden="true" />
-        <i className="in-stars s2" style={{ boxShadow: STARS[1] }} aria-hidden="true" />
-        <i className="in-stars s3" style={{ boxShadow: STARS[2] }} aria-hidden="true" />
-        {SHOOTING.map((style, i) => <i key={i} className="in-shoot" style={style} aria-hidden="true" />)}
-        <div className="in-moon" aria-hidden="true" />
+        <div className="in-milky night" aria-hidden="true" />
+        <i className="in-stars s1 night" style={{ boxShadow: STARS[0] }} aria-hidden="true" />
+        <i className="in-stars s2 night" style={{ boxShadow: STARS[1] }} aria-hidden="true" />
+        <i className="in-stars s3 night" style={{ boxShadow: STARS[2] }} aria-hidden="true" />
+        {SHOOTING.map((style, i) => <i key={i} className="in-shoot night" style={style} aria-hidden="true" />)}
+        <div className="in-moon night" aria-hidden="true" />
+        {/* día: sol, nubes y pájaros (se muestran solo en modo claro) */}
+        <div className="in-sun day" aria-hidden="true" />
+        <div className="in-clouds day" aria-hidden="true">
+          {CLOUDS.map((c, i) => <i key={i} className="in-cloud" style={c} />)}
+        </div>
+        <div className="in-birds day" aria-hidden="true">
+          {BIRDS.map((b, i) => (
+            <svg key={i} className="in-bird" style={b} viewBox="0 0 24 10"><path d="M1 7 Q6 1 12 6 Q18 1 23 7" /></svg>
+          ))}
+        </div>
         <svg className="in-layer in-back" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
-          <Ridge id="r-back" d={BACK} top="#2e3a78" bottom="#161c42" rim="rgba(190,205,255,.35)" />
+          <Ridge layer="back" d={BACK} />
         </svg>
         <div className="in-mist m1" aria-hidden="true" />
         <svg className="in-layer in-mid" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
-          <Ridge id="r-mid" d={MID} top="#1d2552" bottom="#0c1129" rim="rgba(170,190,255,.25)" />
+          <Ridge layer="mid" d={MID} />
         </svg>
         <div className="in-valley" aria-hidden="true">
           <svg className="in-floor" viewBox="0 0 1440 400" preserveAspectRatio="none">
-            <Ridge id="r-floor" d={FLOOR} top="#161c40" bottom="#0b0f24" rim="rgba(255,190,120,.12)" />
+            <Ridge layer="floor" d={FLOOR} />
           </svg>
-          <i className="in-glow" />
-          <i className="in-city" style={{ boxShadow: CITY }} />
-          <i className="in-city bright" style={{ boxShadow: CITY_BRIGHT }} />
+          <i className="in-glow night" />
+          <i className="in-city night" style={{ boxShadow: CITY }} />
+          <i className="in-city bright night" style={{ boxShadow: CITY_BRIGHT }} />
+          <i className="in-city roofs day" style={{ boxShadow: ROOFS }} />
         </div>
         <div className="in-mist m2" aria-hidden="true" />
         <div className="in-name">
@@ -87,7 +116,7 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
         </div>
         <div className="in-front" aria-hidden="true">
           <svg viewBox="0 0 1440 400" preserveAspectRatio="none">
-            <Ridge id="r-front" d={FRONT} top="#0d1226" bottom="#05070f" rim="rgba(150,170,255,.18)" />
+            <Ridge layer="front" d={FRONT} />
           </svg>
           <i className="in-ground" />
         </div>
