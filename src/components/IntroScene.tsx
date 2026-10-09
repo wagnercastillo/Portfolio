@@ -11,11 +11,14 @@ const CITY = cityLights(21, 520, { yMin: 79, yMax: 88, spread: 22, size: [0.4, 1
 const CITY_BRIGHT = cityLights(22, 45, { yMin: 80, yMax: 87, spread: 16, size: [1.2, 1.9], colors: ['#fff4d6', '#ffcf70'] });
 // estrellas fugaces en zonas libres del cielo (lejos del nombre); dx/dy en vw, la estela se orienta a su movimiento
 const SHOOTING = [
+  // → hacia la derecha
   { top: 13, left: 2, dx: 18, dy: 8, len: 170, dur: 11, delay: 3 },
-  { top: 11, left: 60, dx: 14, dy: 5, len: 150, dur: 13, delay: 6.5 },
   { top: 40, left: 86, dx: 10, dy: 4, len: 130, dur: 9.5, delay: 9 },
-  { top: 30, left: 0, dx: 10, dy: 4.5, len: 140, dur: 15, delay: 1.2 },
-  { top: 11, left: 33, dx: 10, dy: 2.5, len: 120, dur: 17, delay: 12 },
+  { top: 22, left: 60, dx: 9, dy: 3, len: 110, dur: 16, delay: 14 },
+  // ← hacia la izquierda (dx negativo: la estela gira sola hacia el otro lado)
+  { top: 10, left: 92, dx: -16, dy: 6, len: 150, dur: 13, delay: 6.5 },
+  { top: 34, left: 4, dx: -12, dy: 5, len: 140, dur: 15, delay: 1.2 },
+  { top: 12, left: 50, dx: -10, dy: 2.5, len: 120, dur: 17, delay: 11 },
 ].map((s) => ({
   top: `${s.top}vh`, left: `${s.left}vw`, '--dx': `${s.dx}vw`, '--dy': `${s.dy}vw`, width: s.len,
   rotate: `${((Math.atan2(s.dy, s.dx) * 180) / Math.PI).toFixed(1)}deg`,
