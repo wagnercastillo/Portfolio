@@ -1,13 +1,22 @@
+import type { Lang } from './i18n';
+
 export interface Brief { needs: string[]; when: string | null; note: string; name: string }
 
 // ponytail: zona y horario fijos (Loja); mover a Keystatic si cambian.
 const TIMEZONE = 'America/Guayaquil';
 const WORK = { days: [1, 2, 3, 4, 5], from: 8, to: 18 };
 
-const list = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} y ${xs[xs.length - 1]}`);
+const list = (xs: string[], and = 'y') => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} ${and} ${xs[xs.length - 1]}`);
 
 /** Redacta el mensaje que el visitante enviará por WhatsApp o email. */
-export function buildMessage({ needs, when, note, name }: Brief) {
+export function buildMessage({ needs, when, note, name }: Brief, lang: Lang = 'es') {
+  if (lang === 'en') {
+    const hi = name.trim() ? `Hi Cristhoper, I'm ${name.trim()}. I saw your portfolio` : 'Hi Cristhoper, I saw your portfolio';
+    const out = [needs.length ? `${hi} and I need ${list(needs, 'and')}.` : `${hi} and I'd like to talk about a project.`];
+    if (when) out.push(`Timeline: ${when}.`);
+    if (note.trim()) out.push(note.trim());
+    return out.join(' ');
+  }
   const hello = name.trim() ? `Hola Cristhoper, soy ${name.trim()}. Vi tu portafolio` : 'Hola Cristhoper, vi tu portafolio';
   const parts = [needs.length ? `${hello} y necesito ${list(needs)}.` : `${hello} y me gustaría conversar sobre un proyecto.`];
   if (when) parts.push(`Plazo: ${when}.`);
@@ -38,11 +47,12 @@ export function localTime(now: Date) {
 const LOJA_OFFSET = -300; // minutos respecto a UTC (Ecuador no usa horario de verano)
 
 /** Frase con la diferencia entre la hora del visitante (offset en minutos, ej. -300) y Loja. */
-export function timeDiffLabel(visitorOffset: number) {
+export function timeDiffLabel(visitorOffset: number, lang: Lang = 'es') {
   const diff = visitorOffset - LOJA_OFFSET;
-  if (diff === 0) return '¡Estamos en la misma hora!';
+  if (diff === 0) return lang === 'en' ? "We're in the same time zone!" : '¡Estamos en la misma hora!';
   const abs = Math.abs(diff), h = Math.floor(abs / 60), m = abs % 60;
-  return `Vas ${h} h${m ? ` ${m} min` : ''} ${diff > 0 ? 'adelante' : 'detrás'} de mí`;
+  const gap = `${h} h${m ? ` ${m} min` : ''}`;
+  return lang === 'en' ? `You're ${gap} ${diff > 0 ? 'ahead of' : 'behind'} me` : `Vas ${gap} ${diff > 0 ? 'adelante' : 'detrás'} de mí`;
 }
 
-export const cityFromTz = (tz: string) => (tz ? tz.split('/').pop()!.replace(/_/g, ' ') : 'tu ciudad');
+export const cityFromTz = (tz: string, lang: Lang = 'es') => (tz ? tz.split('/').pop()!.replace(/_/g, ' ') : lang === 'en' ? 'your city' : 'tu ciudad');

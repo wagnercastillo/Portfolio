@@ -18,7 +18,7 @@ export function NavEffects() {
     const nav = header?.querySelector<HTMLElement>('.site-nav');
     const pill = nav?.querySelector<HTMLElement>('.nav-pill');
     if (!header || !nav || !pill) return;
-    const links = [...nav.querySelectorAll<HTMLAnchorElement>('a[href^="/#"]')];
+    const links = [...nav.querySelectorAll<HTMLAnchorElement>('a[href*="#"]')];
     let raf = 0;
 
     const update = () => {

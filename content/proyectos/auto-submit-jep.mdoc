@@ -1,6 +1,25 @@
 ---
 titulo: "Auto Submit JEP"
 resumen: "Extensión de Chrome para el ServiceDesk GLPI de Cooperativa JEP: auto envío con temporizador, plantillas de ticket y snippets."
+en:
+  titulo: "Auto Submit JEP"
+  resumen: "Chrome extension for the Cooperativa JEP GLPI ServiceDesk: timed auto-submit, ticket templates, and snippets."
+  contenido: |
+    ## Problem
+
+    The support team repeated the same tickets and replies in GLPI 9.5 every day: filling in fields one by one, typing the same solutions, and waiting to press **Añadir** (Add).
+
+    ## Solution
+
+    Chrome extension (Manifest V3) that integrates with the ServiceDesk without touching the server. Templates take advantage of GLPI's new-ticket form accepting its fields via URL, so the ticket opens pre-filled and GLPI enforces its own required-field rules.
+
+    ## Features
+
+    - Timer that presses **Añadir** (Add) on the solution after the chosen delay
+    - Ticket templates (type, category, source, location, urgency, status, duration, title, and description) opened in one click
+    - Snippets: `/shortcut` + `Tab` inside the TinyMCE editor is replaced with the saved text
+    - Export and import templates and snippets as `.json` to share with the team
+    - Light and dark mode, 6 palettes plus a custom color with automatic WCAG contrast
 cliente: "Cooperativa JEP"
 categoria: "Cliente"
 stack:

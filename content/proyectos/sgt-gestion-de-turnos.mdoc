@@ -1,6 +1,24 @@
 ---
 titulo: "SGT — Gestión de turnos"
 resumen: "Sistema de turnos para agencias de Cooperativa JEP con nodo local offline y sincronización con la central."
+en:
+  titulo: "SGT — Queue Management"
+  resumen: "Queue management system for Cooperativa JEP branches with an offline local node and sync with headquarters."
+  contenido: |
+    ## Problem
+
+    Branches needed to keep managing service queues even when the connection to headquarters went down.
+
+    ## Solution
+
+    Six-application architecture: central server, a local node per branch with two-way sync, kiosk, operator console, and TV display.
+
+    ## Features
+
+    - Kiosk that issues tickets with QR codes
+    - Operator console and call display
+    - Offline operation with two-way sync
+    - Consolidated CSV reports and Active Directory authentication
 cliente: "Cooperativa JEP"
 categoria: "Cliente"
 stack:

@@ -10,13 +10,15 @@ import { Timeline } from '@/components/Timeline';
 import { Experience } from '@/components/Experience';
 import { StackSection } from '@/components/StackSection';
 import { Contact } from '@/components/Contact';
+import { getLang } from '@/lib/i18n-server';
 
 export default async function Home() {
-  const [perfil, projects] = await Promise.all([getPerfil(), getProjects()]);
+  const lang = await getLang();
+  const [perfil, projects] = await Promise.all([getPerfil(lang), getProjects(lang)]);
   const cards = projects.map((p) => ({ ...p, icons: stackIcons(p.stack) }));
-  const bodies = Object.fromEntries(await Promise.all(projects.map(async (p) => [p.slug, (await getProject(p.slug))?.body ?? null])));
+  const bodies = Object.fromEntries(await Promise.all(projects.map(async (p) => [p.slug, (await getProject(p.slug, lang))?.body ?? null])));
   // la marquesina muestra tecnologías, no habilidades blandas
-  const tech = perfil.habilidades.filter((h) => !/blandas/i.test(h.grupo)).flatMap((h) => h.items);
+  const tech = perfil.habilidades.filter((h) => !h.blandas).flatMap((h) => h.items);
   return (
     <main style={{ display: 'contents' }}>
       <IntroScene nombre={perfil.nombre} rol={perfil.rol} ubicacion={perfil.ubicacion} />

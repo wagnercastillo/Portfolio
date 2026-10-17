@@ -1,6 +1,24 @@
 ---
 titulo: "Migración GMX Seguros"
 resumen: "Modernización del core de una aseguradora: de Visual Basic 6 a microservicios .NET con frontend React."
+en:
+  titulo: "GMX Seguros Migration"
+  resumen: "Modernization of an insurer's core system: from Visual Basic 6 to .NET microservices with a React frontend."
+  contenido: |
+    ## Problem
+
+    The insurance core (accounting, claims, collections, policy issuance) depended on a monolithic Visual Basic 6 system that was hard to maintain.
+
+    ## Solution
+
+    Incremental migration to .NET microservices behind a gateway, with a React/TypeScript frontend and workers for batch processes.
+
+    ## Features
+
+    - Accounting, Claims, Collections, Security, and Backoffice Issuance APIs
+    - Workers for monthly closings and proration
+    - Maintenance and optimization of SQL Server stored procedures
+    - Containerized environments with Docker
 cliente: "GMX"
 categoria: "Cliente"
 stack:

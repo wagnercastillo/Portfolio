@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useT } from './useT';
 
 const FOCUS: Record<string, string> = { arriba: '50% 22%', centro: '50% 55%', abajo: '50% 85%' };
 
@@ -12,6 +13,7 @@ export function HeroPhotos({ photos, nombre, ubicacion }: { photos: { imagen: st
   const [warm, setWarm] = useState(false);
   useEffect(() => { const t = setTimeout(() => setWarm(true), 3000); return () => clearTimeout(t); }, []);
   const many = photos.length > 1;
+  const t = useT();
 
   useEffect(() => {
     if (!many || paused || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -25,12 +27,12 @@ export function HeroPhotos({ photos, nombre, ubicacion }: { photos: { imagen: st
     <figure className="card photo tilt reveal" style={{ '--d': 1 } as React.CSSProperties}
       onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       {photos.map((p, k) => (k === 0 || warm) && (
-        <Image key={p.imagen} src={p.imagen} alt={k === i ? `Foto de ${nombre}` : ''} fill
+        <Image key={p.imagen} src={p.imagen} alt={k === i ? t.hero.photoOf(nombre) : ''} fill
           sizes="(min-width: 1024px) 420px, 100vw" className={k === i ? 'on' : ''}
           style={{ objectPosition: FOCUS[p.enfoque] ?? FOCUS.centro }} />
       ))}
       {many && (
-        <button type="button" className="photo-next" onClick={next} aria-label={`Ver otra foto (${i + 1} de ${photos.length})`} />
+        <button type="button" className="photo-next" onClick={next} aria-label={t.hero.nextPhoto(i + 1, photos.length)} />
       )}
       <figcaption>
         <strong>{nombre}</strong>

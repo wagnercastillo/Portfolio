@@ -8,6 +8,14 @@ bio: >-
   Ingeniero en Ciencias de la Computación con experiencia en aplicaciones web escalables, modulares y eficientes.
   Combino frontend y backend para construir soluciones completas con código limpio y mantenible, y tengo vocación
   por automatizar procesos. He entregado sistemas para banca cooperativa, seguros, energía y recursos humanos.
+en:
+  rol: Computer Science Engineer · Full-Stack Developer
+  bio: >-
+    Computer Science Engineer experienced in building scalable, modular and efficient web applications.
+    I combine frontend and backend to deliver complete solutions with clean, maintainable code, and I have a
+    passion for automating processes. I have shipped systems for cooperative banking, insurance, energy and human resources.
+  ubicacion: Loja, Ecuador
+  idiomas: Spanish (native) · English (basic)
 ubicacion: Loja, Ecuador
 email: wagner.cristhoper.castillo@gmail.com
 telefono: "+593991483745"
@@ -24,6 +32,14 @@ experiencia:
       - Containerización de entornos con Docker para desarrollo y producción.
       - Mantenimiento de stored procedures y optimización de consultas en SQL Server.
       - quinielast4s.com, plataforma pública de predicciones deportivas en producción.
+    en:
+      cargo: Full Stack Developer
+      logros:
+        - Migrated a legacy Visual Basic 6 system to .NET with a React/TypeScript frontend.
+        - Built the human resources module with Next.js and TypeScript.
+        - Containerized development and production environments with Docker.
+        - Maintained stored procedures and optimized queries in SQL Server.
+        - quinielast4s.com, a public sports prediction platform in production.
   - cargo: Técnico de Soporte TI
     empresa: Cooperativa de Ahorro y Crédito JEP
     periodo: Jun 2024 – Oct 2025
@@ -32,6 +48,13 @@ experiencia:
       - Instalación y configuración de equipos para nuevas agencias.
       - Atención y resolución de requerimientos de soporte técnico.
       - Administración del sistema de turnos e infraestructura institucional.
+    en:
+      cargo: IT Support Technician
+      logros:
+        - Institutional web app for IT asset management (React/TypeScript, PrimeReact, TanStack Query).
+        - Installed and configured equipment for new branches.
+        - Handled and resolved technical support requests.
+        - Managed the queue management system and institutional infrastructure.
   - cargo: Desarrollador Full Stack
     empresa: Universidad Nacional de Loja
     periodo: Abr 2023 – Feb 2024
@@ -39,20 +62,37 @@ experiencia:
       - API e interfaz web para predicción de energía eólica en la Central Villonaco con datos SCADA y red neuronal LSTM.
       - Backend con NestJS y Python/Flask/TensorFlow; frontend responsive con React/Redux.
       - Diseño de base de datos MongoDB y administración de contenedores Docker.
+    en:
+      cargo: Full Stack Developer
+      logros:
+        - API and web interface for wind power forecasting at the Villonaco plant using SCADA data and an LSTM neural network.
+        - Backend with NestJS and Python/Flask/TensorFlow; responsive frontend with React/Redux.
+        - Designed the MongoDB database and managed Docker containers.
 educacion:
   - titulo: Ingeniero en Ciencias de la Computación
     detalle: Universidad Nacional de Loja — Loja, Ecuador
+    en:
+      titulo: Computer Science Engineer
+      detalle: Universidad Nacional de Loja — Loja, Ecuador
   - titulo: Certificaciones en Desarrollo Web y Seguridad de la Información
     detalle: Cisco (2) · Udemy (6) · Otras plataformas (4)
+    en:
+      titulo: Certifications in Web Development and Information Security
+      detalle: Cisco (2) · Udemy (6) · Other platforms (4)
 habilidades:
   - grupo: Frontend
+    grupoEn: Frontend
     items: [JavaScript, TypeScript, React, Redux, Angular, RxJS, Next.js, Tailwind CSS, Material UI, Chart.js, PrimeReact, TanStack Query, Zustand, Recharts, TinyMCE, Flutter, Dart, Tauri, Remotion, Chrome Extension MV3]
   - grupo: Backend
+    grupoEn: Backend
     items: [Node.js, Express, NestJS, .NET, C#, VB6, PHP, Laravel, Livewire, Python, FastAPI, Django, Flask, TensorFlow, Java, REST APIs, GraphQL, Socket.IO, WebSocket, Claude API, Gemini, WhatsApp API, Google OAuth, Google Maps, Google Calendar, FFmpeg]
   - grupo: DevOps & Infraestructura
+    grupoEn: DevOps & Infrastructure
     items: [Docker, Nx, Git, GitLab, GitHub, Active Directory, Linux, MinIO, GLPI]
   - grupo: Bases de datos
+    grupoEn: Databases
     items: [PostgreSQL, MySQL, SQL Server, MongoDB, Firebase, Redis, Prisma, TypeORM]
   - grupo: Habilidades blandas
+    grupoEn: Soft skills
     items: [Trabajo en equipo, Adaptabilidad, Resolución de problemas, Comunicación efectiva, Proactividad]
 idiomas: Español (nativo) · Inglés (básico)

@@ -3,10 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import { byCategory, categoriesOf, wrapIndex, type Categoria } from '@/lib/projects';
 import { ProjectCard } from './ProjectCard';
 import { QuickView, type CardProject } from './QuickView';
+import { useT } from './useT';
+import { term } from '@/lib/i18n';
 
 type Filtro = Categoria | 'Todos';
 
 export function ProjectGrid({ projects, bodies }: { projects: CardProject[]; bodies: Record<string, React.ReactNode> }) {
+  const t = useT();
   const [cat, setCat] = useState<Filtro>('Todos');
   const [filtered, setFiltered] = useState(false);
   const [pill, setPill] = useState({ left: 4, width: 0 });
@@ -33,12 +36,12 @@ export function ProjectGrid({ projects, bodies }: { projects: CardProject[]; bod
   return (
     <section aria-labelledby="todos" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div className="section-head">
-        <h2 id="todos" className="section-title reveal scramble">Todos los proyectos</h2>
-        <div className={`filters${pill.width ? ' ready' : ''}`} role="group" aria-label="Filtrar por categoría">
+        <h2 id="todos" className="section-title reveal scramble">{t.projects.all}</h2>
+        <div className={`filters${pill.width ? ' ready' : ''}`} role="group" aria-label={t.projects.filter}>
           <span className="pill" style={{ left: pill.left, width: pill.width }} />
           {chips.map((c) => (
             <button key={c} ref={(el) => { btns.current[c] = el; }} type="button" aria-pressed={cat === c} onClick={() => pick(c)}>
-              {c}
+              {c === 'Todos' ? t.projects.allChip : term(t, c)}
             </button>
           ))}
         </div>

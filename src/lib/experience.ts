@@ -1,4 +1,5 @@
 import type { Project } from './projects';
+import { dict, type Lang } from './i18n';
 
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
@@ -20,7 +21,10 @@ export function mesesTrabajados(periodo: string, now = new Date()): number | nul
   return Math.max((end.y - from.y) * 12 + end.m - from.m + 1, 1);
 }
 
-export const fmtMes = (x: Mes | null) => (x ? `${MESES[x.m].toUpperCase()} ${x.y}` : 'HOY');
+export const fmtMes = (x: Mes | null, lang: Lang = 'es') => {
+  const t = dict(lang).exp;
+  return x ? `${t.months[x.m]} ${x.y}` : t.now;
+};
 
 /** Diseño de credencial según la empresa; `match` reconoce el campo `cliente` de los proyectos. */
 export type Estilo = 't4s' | 'jep' | 'unl' | 'base';

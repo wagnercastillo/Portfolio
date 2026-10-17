@@ -1,13 +1,16 @@
+'use client';
 import Image from 'next/image';
+import { useT } from './useT';
 import { coverHue, initials, type Project } from '@/lib/projects';
 
 /** Portada subida desde el panel o, si no hay, placeholder con iniciales y tinte estable por slug. */
 export function ProjectCover({ project, priority = false, ratio }: { project: Project; priority?: boolean; ratio?: string }) {
+  const t = useT();
   const style = ratio ? { aspectRatio: ratio } : undefined;
   if (project.portada) {
     return (
       <div className="cover" style={style}>
-        <Image src={project.portada} alt={`Portada de ${project.titulo}`} fill priority={priority} sizes="(min-width: 1024px) 50vw, 100vw" />
+        <Image src={project.portada} alt={t.projects.coverOf(project.titulo)} fill priority={priority} sizes="(min-width: 1024px) 50vw, 100vw" />
       </div>
     );
   }

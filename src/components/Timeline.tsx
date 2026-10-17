@@ -4,14 +4,15 @@ import Link from 'next/link';
 import { useEffect, useMemo, useRef } from 'react';
 import type { Project } from '@/lib/projects';
 import { litCount, travelerX } from '@/lib/scene';
-
-const MESES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+import { localize, term } from '@/lib/i18n';
+import { useT } from './useT';
 
 /**
  * Línea de tiempo tipo metro: en escritorio el scroll vertical desplaza la línea en horizontal,
  * un viajero con tu foto recorre las estaciones y las va encendiendo; los años gigantes van detrás.
  */
 export function Timeline({ projects, foto }: { projects: Project[]; foto: string | null }) {
+  const t = useT();
   const items = useMemo(() => [...projects].filter((p) => p.fecha).sort((a, b) => a.fecha.localeCompare(b.fecha)), [projects]);
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLOListElement>(null);
@@ -67,8 +68,8 @@ export function Timeline({ projects, foto }: { projects: Project[]; foto: string
     <section id="trayectoria" className="tl" aria-labelledby="tl-t" ref={section}>
       <div className="tl-sticky">
         <div className="section-head" style={{ margin: '0 4px' }}>
-          <h2 id="tl-t" className="section-title scramble">Trayectoria</h2>
-          <span className="label">{first} → {last} · {items.length} proyectos · sigue bajando ↓</span>
+          <h2 id="tl-t" className="section-title scramble">{t.timeline.title}</h2>
+          <span className="label">{first} → {last} · {t.timeline.meta(items.length)}</span>
         </div>
         <div className="tl-viewport">
           <span className="tl-year" ref={year} aria-hidden="true" />
@@ -86,7 +87,7 @@ export function Timeline({ projects, foto }: { projects: Project[]; foto: string
               return (
                 <li key={p.slug} className="tl-stop">
                   <span className="tl-dot" aria-hidden="true" />
-                  <Link href={`/proyectos/${p.slug}`} className="tl-item">
+                  <Link href={localize(t.lang, `/proyectos/${p.slug}`)} className="tl-item">
                     <span className="tl-big" aria-hidden="true">{m}</span>
                     {pics.length ? (
                       <div className="tl-pics" aria-hidden="true">
@@ -101,9 +102,9 @@ export function Timeline({ projects, foto }: { projects: Project[]; foto: string
                       </div>
                     )}
                     <div className="card tl-txt spot">
-                      <span className="label">{MESES[Number(m) - 1]} {y}</span>
+                      <span className="label">{t.timeline.months[Number(m) - 1]} {y}</span>
                       <h3>{p.titulo}</h3>
-                      <span className="tl-meta">{p.cliente || p.categoria} · {p.estado}</span>
+                      <span className="tl-meta">{p.cliente || term(t, p.categoria)} · {term(t, p.estado)}</span>
                     </div>
                   </Link>
                 </li>

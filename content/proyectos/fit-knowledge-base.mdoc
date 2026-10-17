@@ -1,6 +1,24 @@
 ---
 titulo: "FIT Knowledge Base"
 resumen: "Base de conocimiento para documentar transacciones del sistema bancario FIT con flujo de aprobación."
+en:
+  titulo: "FIT Knowledge Base"
+  resumen: "Knowledge base to document transactions of the FIT banking system with an approval workflow."
+  contenido: |
+    ## Problem
+
+    Technical documentation for banking transactions was scattered and had no version control.
+
+    ## Solution
+
+    Knowledge base with roles, a review workflow, and Spanish full-text search.
+
+    ## Features
+
+    - RBAC with 4 roles
+    - DRAFT → IN_REVIEW → PUBLISHED workflow
+    - Versioning with JSONB snapshots and audit logging
+    - Spanish full-text search with PostgreSQL
 cliente: "Cooperativa JEP"
 categoria: "Cliente"
 stack:

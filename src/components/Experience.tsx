@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Perfil } from '@/lib/content';
 import type { Project } from '@/lib/projects';
+import { localize } from '@/lib/i18n';
+import { useT } from './useT';
 import { estiloDe, fmtMes, mesesTrabajados, parsePeriodo, proyectosDe, type Estilo } from '@/lib/experience';
 
 const COLOR: Record<Estilo, string> = { t4s: '#41A3EB', jep: '#231f20', unl: '#0d2b52', base: 'var(--accent)' };
@@ -14,6 +16,7 @@ interface Body { el: HTMLElement; w: number; h: number; x: number; y: number; a:
 
 /** Credencial con el diseño de cada empresa (JEP replica el carnet real). */
 function Badge({ j, nombre }: { j: Job; nombre: string }) {
+  const t = useT();
   if (j.estilo === 't4s') return (
     <div className="bd-t4s">
       <span className="slot" />
@@ -41,7 +44,7 @@ function Badge({ j, nombre }: { j: Job; nombre: string }) {
       <div className="tri"><b style={{ background: '#1e7a3c' }} /><b style={{ background: '#fff' }} /><b style={{ background: '#b3202a' }} /></div>
       <div className="bd">
         <div className="ph" />
-        <div><small>Nombre</small><h4>{nombre}</h4><small>Cargo</small><div className="rl">{j.cargo}</div><small>Periodo</small><div className="rl">{j.from} – {j.to}</div></div>
+        <div><small>{t.exp.name}</small><h4>{nombre}</h4><small>{t.exp.role}</small><div className="rl">{j.cargo}</div><small>{t.exp.period}</small><div className="rl">{j.from} – {j.to}</div></div>
       </div>
       <div className="ft"><span className="sig">{nombre.split(' ').map((w, i, a) => (i < a.length - 1 ? `${w[0]}.` : w)).join(' ')}</span><span className="seal" /></div>
     </div>
@@ -62,11 +65,12 @@ function Badge({ j, nombre }: { j: Job; nombre: string }) {
  * Clic (o Enter) abre la ficha con logros, stack y proyectos de esa empresa. En móvil / movimiento reducido no hay física.
  */
 export function Experience({ perfil, projects }: { perfil: Perfil; projects: Project[] }) {
+  const t = useT();
   const jobs = useMemo<Job[]>(() => perfil.experiencia.map((x) => {
     const { from, to } = parsePeriodo(x.periodo);
     const projs = proyectosDe(x.empresa, projects);
-    return { ...x, estilo: estiloDe(x.empresa), from: fmtMes(from), to: fmtMes(to), meses: mesesTrabajados(x.periodo), projs, stack: [...new Set(projs.flatMap((p) => p.stack))].slice(0, 8) };
-  }), [perfil.experiencia, projects]);
+    return { ...x, estilo: estiloDe(x.empresa), from: fmtMes(from, t.lang), to: fmtMes(to, t.lang), meses: mesesTrabajados(x.periodo), projs, stack: [...new Set(projs.flatMap((p) => p.stack))].slice(0, 8) };
+  }), [perfil.experiencia, projects, t.lang]);
   const [sel, setSel] = useState<number | null>(null);
   const desk = useRef<HTMLDivElement>(null);
   const cards = useRef<(HTMLButtonElement | null)[]>([]);
@@ -168,21 +172,21 @@ export function Experience({ perfil, projects }: { perfil: Perfil; projects: Pro
   const j = sel === null ? null : jobs[sel];
   return (
     <section id="experiencia" aria-labelledby="exp-t" className="exp" style={{ '--foto': perfil.foto ? `url(${perfil.foto})` : 'none' } as React.CSSProperties}>
-      <h2 id="exp-t" className="section-title reveal scramble" style={{ margin: '32px 4px 0' }}>Experiencia</h2>
+      <h2 id="exp-t" className="section-title reveal scramble" style={{ margin: '32px 4px 0' }}>{t.exp.title}</h2>
       <div className={`exp-stage reveal${j ? ' open' : ''}`}>
         <div className="exp-desk" ref={desk}>
           {jobs.map((x, i) => (
             <button
               key={`${x.empresa}-${x.periodo}`} type="button" ref={(el) => { cards.current[i] = el; }}
               className={`exp-card${sel === i ? ' sel' : ''}`} aria-expanded={sel === i} aria-controls="exp-panel"
-              aria-label={`${x.cargo} en ${x.empresa}, ${x.periodo}. Ver logros`}
+              aria-label={t.exp.cardAria(x.cargo, x.empresa, `${x.from} – ${x.to}`)}
               onClick={() => { if (dragged.current) { dragged.current = false; return; } setSel(sel === i ? null : i); }}
             >
               <span className="strap" data-e={x.estilo} /><span className="clip" />
               <span className="lift"><Badge j={x} nombre={perfil.nombre} /></span>
             </button>
           ))}
-          <span className="exp-tip" aria-hidden="true">↔ arrastra y lanza · clic = ver ficha</span>
+          <span className="exp-tip" aria-hidden="true">{t.exp.tip}</span>
         </div>
         <aside id="exp-panel" className="exp-panel" aria-live="polite" inert={!j}>
           {j && (
@@ -193,18 +197,18 @@ export function Experience({ perfil, projects }: { perfil: Perfil; projects: Pro
                     : j.estilo === 'unl' ? <img src="/experiencia/unl-logo.png" alt="Universidad Nacional de Loja" style={{ height: 44 }} />
                     : j.estilo === 'jep' ? <span className="pname"><span className="jep-mk">JEP</span>Cooperativa JEP</span>
                     : <span className="pname">{j.empresa}</span>}
-                  <button type="button" className="x" aria-label="Cerrar ficha" onClick={() => setSel(null)}>✕</button>
+                  <button type="button" className="x" aria-label={t.exp.close} onClick={() => setSel(null)}>✕</button>
                 </div>
                 <h3>{j.cargo}</h3>
                 <div className="sub">{j.empresa}</div>
                 <div className="pills">
                   <span>{j.from} → {j.to}</span>
-                  {j.meses && <span>{j.meses} {j.meses === 1 ? 'mes' : 'meses'}</span>}
-                  <span>{j.logros.length} logros</span>
+                  {j.meses && <span>{t.exp.months_n(j.meses)}</span>}
+                  <span>{t.exp.logros_n(j.logros.length)}</span>
                 </div>
               </div>
               <div className="p-sec">
-                <h4 className="label">Logros</h4>
+                <h4 className="label">{t.exp.logros}</h4>
                 <ol className="logros">{j.logros.map((l, i) => <li key={l} style={{ '--i': i } as React.CSSProperties}><i>{String(i + 1).padStart(2, '0')}</i><span>{l}</span></li>)}</ol>
               </div>
               {j.stack.length > 0 && (
@@ -212,12 +216,12 @@ export function Experience({ perfil, projects }: { perfil: Perfil; projects: Pro
               )}
               {j.projs.length > 0 && (
                 <div className="p-sec">
-                  <h4 className="label">Proyectos aquí · {j.projs.length}</h4>
+                  <h4 className="label">{t.exp.here} · {j.projs.length}</h4>
                   <div className="projs">
                     {j.projs.map((p) => (
-                      <Link key={p.slug} href={`/proyectos/${p.slug}`} className="proj">
+                      <Link key={p.slug} href={localize(t.lang, `/proyectos/${p.slug}`)} className="proj">
                         <span className="im">{p.portada ? <Image src={p.portada} alt="" width={320} height={200} sizes="210px" /> : p.titulo.split(' ')[0]}</span>
-                        <b>{p.titulo}</b><small>{p.estado}</small>
+                        <b>{p.titulo}</b><small>{t.terms[p.estado] ?? p.estado}</small>
                       </Link>
                     ))}
                   </div>
@@ -228,8 +232,8 @@ export function Experience({ perfil, projects }: { perfil: Perfil; projects: Pro
         </aside>
       </div>
       <div className="exp-edu reveal">
-        {perfil.educacion.map((e) => <span key={e.titulo}><span className="label">{/certific/i.test(e.titulo) ? 'Certificaciones' : 'Educación'}</span>{e.titulo} — {e.detalle}</span>)}
-        {perfil.idiomas && <span><span className="label">Idiomas</span>{perfil.idiomas}</span>}
+        {perfil.educacion.map((e) => <span key={e.titulo}><span className="label">{/certific/i.test(e.titulo) ? t.exp.certs : t.exp.edu}</span>{e.titulo} — {e.detalle}</span>)}
+        {perfil.idiomas && <span><span className="label">{t.exp.langs}</span>{perfil.idiomas}</span>}
       </div>
     </section>
   );

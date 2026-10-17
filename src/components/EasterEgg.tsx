@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { useT } from './useT';
 
 const KONAMI = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
 
@@ -29,6 +30,7 @@ function confetti() {
 
 /** Código Konami (↑↑↓↓←→←→BA) o 5 toques al logo: confeti + carta de Scrum Poker. */
 export function EasterEgg() {
+  const t = useT();
   const [show, setShow] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -64,8 +66,8 @@ export function EasterEgg() {
       <div className="pc">13</div>
       {show && (
         <div>
-          <div style={{ fontWeight: 800, fontSize: 17 }}>Modo dev desbloqueado</div>
-          <div className="mono" style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>Estimación: 13 puntos de pura curiosidad.</div>
+          <div style={{ fontWeight: 800, fontSize: 17 }}>{t.egg.title}</div>
+          <div className="mono" style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>{t.egg.sub}</div>
         </div>
       )}
     </div>

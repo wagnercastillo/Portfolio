@@ -21,6 +21,14 @@ export default config({
           multiline: true,
           validation: { length: { min: 1, max: 160 } },
         }),
+        en: fields.object(
+          {
+            titulo: fields.text({ label: 'Title' }),
+            resumen: fields.text({ label: 'Summary', multiline: true, validation: { length: { max: 160 } } }),
+            contenido: fields.text({ label: 'Content (Markdown)', multiline: true }),
+          },
+          { label: 'English' },
+        ),
         cliente: fields.text({ label: 'Cliente' }),
         categoria: fields.select({
           label: 'Categoría',
@@ -83,6 +91,15 @@ export default config({
           { label: 'Más fotos (carrusel del inicio)', itemLabel: (p) => p.fields.imagen.value?.filename ?? 'Foto' },
         ),
         bio: fields.text({ label: 'Bio', multiline: true }),
+        en: fields.object(
+          {
+            rol: fields.text({ label: 'Role' }),
+            bio: fields.text({ label: 'Bio', multiline: true }),
+            ubicacion: fields.text({ label: 'Location' }),
+            idiomas: fields.text({ label: 'Languages' }),
+          },
+          { label: 'English' },
+        ),
         ubicacion: fields.text({ label: 'Ubicación' }),
         email: fields.text({ label: 'Email' }),
         telefono: fields.text({ label: 'Teléfono / WhatsApp (formato +593...)' }),
@@ -98,6 +115,13 @@ export default config({
               label: 'Logros',
               itemLabel: (p) => p.value,
             }),
+            en: fields.object(
+              {
+                cargo: fields.text({ label: 'Role' }),
+                logros: fields.array(fields.text({ label: 'Achievement' }), { label: 'Achievements', itemLabel: (p) => p.value }),
+              },
+              { label: 'English' },
+            ),
           }),
           { label: 'Experiencia', itemLabel: (p) => `${p.fields.cargo.value} · ${p.fields.empresa.value}` },
         ),
@@ -105,12 +129,14 @@ export default config({
           fields.object({
             titulo: fields.text({ label: 'Título' }),
             detalle: fields.text({ label: 'Institución / detalle' }),
+            en: fields.object({ titulo: fields.text({ label: 'Title' }), detalle: fields.text({ label: 'Detail' }) }, { label: 'English' }),
           }),
           { label: 'Educación', itemLabel: (p) => p.fields.titulo.value },
         ),
         habilidades: fields.array(
           fields.object({
             grupo: fields.text({ label: 'Grupo' }),
+            grupoEn: fields.text({ label: 'Group (English)' }),
             items: fields.array(fields.text({ label: 'Habilidad' }), {
               label: 'Habilidades',
               itemLabel: (p) => p.value,

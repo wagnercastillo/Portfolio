@@ -1,9 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { cityFromTz, localTime, timeDiffLabel } from '@/lib/contact';
+import { useT } from './useT';
 
 /** Dos relojes (Loja y el del visitante) y la diferencia horaria. Solo en cliente: depende del navegador. */
 export function TimeDiff({ ciudad }: { ciudad: string }) {
+  const t = useT();
   const [now, setNow] = useState<Date | null>(null);
   useEffect(() => {
     setNow(new Date());
@@ -12,14 +14,14 @@ export function TimeDiff({ ciudad }: { ciudad: string }) {
   }, []);
   if (!now) return <div className="timediff" aria-hidden="true" />;
 
-  const mine = new Intl.DateTimeFormat('es', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(now);
+  const mine = new Intl.DateTimeFormat(t.locale, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(now);
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone ?? '';
-  const label = timeDiffLabel(-now.getTimezoneOffset());
+  const label = timeDiffLabel(-now.getTimezoneOffset(), t.lang);
   return (
     <div className="timediff">
       <div className="clock"><span className="label">{ciudad}</span><b>{localTime(now).time}</b></div>
       <div className="timediff-mid" aria-live="polite"><i aria-hidden="true" /><span>{label}</span><i aria-hidden="true" /></div>
-      <div className="clock"><span className="label">Tú · {cityFromTz(tz)}</span><b>{mine}</b></div>
+      <div className="clock"><span className="label">{t.contact.you} · {cityFromTz(tz, t.lang)}</span><b>{mine}</b></div>
     </div>
   );
 }

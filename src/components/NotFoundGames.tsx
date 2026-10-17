@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-
-const FRASE = 'Este proyecto no existe (todavía).';
+import { localize } from '@/lib/i18n';
+import { useT } from './useT';
 const KEY = '404-juego';
 const N_BUGS = 8;
 
@@ -23,29 +23,34 @@ const noSub = () => () => {};
 
 export function NotFoundGames() {
   const game = useSyncExternalStore(noSub, elegir, () => null);
+  const t = useT();
 
   return (
     <main className="card nf">
       {game === 0 ? <Breakout /> : game === 1 ? <Bugs /> : game === 2 ? <Gravity /> : (
         <div className="nf-static">
           <p className="big" style={{ color: 'var(--accent)' }}>404</p>
-          <h1>{FRASE}</h1>
-          <div><Link href="/" className="btn btn-accent">← Volver al inicio</Link></div>
+          <h1>{t.nf.phrase}</h1>
+          <div><Home /></div>
         </div>
       )}
     </main>
   );
 }
 
-const Home = ({ soft }: { soft?: boolean }) => <Link href="/" className={`btn ${soft ? 'btn-soft' : 'btn-accent'}`}>← Volver al inicio</Link>;
+function Home({ soft }: { soft?: boolean }) {
+  const t = useT();
+  return <Link href={localize(t.lang, '/')} className={`btn ${soft ? 'btn-soft' : 'btn-accent'}`}>{t.nf.home}</Link>;
+}
 
 /* ---------- 1 · Breakout: el 404 hecho de ladrillos ---------- */
 const DIGITS: Record<string, string[]> = { '4': ['101', '101', '111', '001', '001'], '0': ['111', '101', '101', '101', '111'] };
 
 function Breakout() {
+  const nf = useT().nf;
   const cv = useRef<HTMLCanvasElement>(null);
   const [hud, setHud] = useState('♥♥♥ · 0 pts');
-  const [msg, setMsg] = useState<{ t: string; p: string; again: boolean } | null>({ t: '404', p: '¿Lo arreglamos rompiéndolo?', again: false });
+  const [msg, setMsg] = useState<{ t: string; p: string; again: boolean } | null>({ t: '404', p: nf.breakoutIntro, again: false });
   const startRef = useRef<() => void>(() => {});
 
   useEffect(() => {
@@ -87,8 +92,8 @@ function Breakout() {
         if (Math.min(ball.x - b.x, b.x + b.s - ball.x) < Math.min(ball.y - b.y, b.y + b.s - ball.y)) ball.vx *= -1; else ball.vy *= -1;
         break;
       }
-      if (ball.y > H + 20) { lives--; if (!lives) return end('Game over', 'El 404 sigue ahí. ¿Revancha?'); serve(); }
-      if (bricks.every((b) => b.hit)) return end('Error resuelto ✓', `${pts} pts. Ahora sí, vuelve al inicio.`);
+      if (ball.y > H + 20) { lives--; if (!lives) return end(nf.over, nf.overSub); serve(); }
+      if (bricks.every((b) => b.hit)) return end(nf.solved, nf.solvedSub(pts));
       setHud(`${'♥'.repeat(lives)}${'♡'.repeat(3 - lives)} · ${pts} pts`);
       draw(); raf = requestAnimationFrame(step);
     };
@@ -97,16 +102,16 @@ function Breakout() {
     c.addEventListener('pointermove', move);
     size(); build(); px = W / 2; ball = { ...ball, x: W / 2, y: H - 70 }; draw();
     return () => { cancelAnimationFrame(raf); c.removeEventListener('pointermove', move); };
-  }, []);
+  }, [nf]);
 
   return (
     <>
-      <canvas ref={cv} className="nf-canvas" aria-label="Juego: rompe el 404 con la pelota" />
-      <div className="nf-hud"><h1 className="label">{FRASE}</h1><b>{hud}</b></div>
+      <canvas ref={cv} className="nf-canvas" aria-label={nf.breakoutAria} />
+      <div className="nf-hud"><h1 className="label">{nf.phrase}</h1><b>{hud}</b></div>
       {msg && (
         <div className="nf-msg bottom"><div>
           <p className="nf-title">{msg.t}</p><p>{msg.p}</p>
-          <div className="nf-btns"><button type="button" className="btn btn-accent" onClick={() => startRef.current()}>▶ {msg.again ? 'Jugar otra vez' : 'Jugar'}</button><Home soft /></div>
+          <div className="nf-btns"><button type="button" className="btn btn-accent" onClick={() => startRef.current()}>▶ {msg.again ? nf.again : nf.play}</button><Home soft /></div>
         </div></div>
       )}
     </>
@@ -117,6 +122,7 @@ function Breakout() {
 interface Bug { x: number; y: number; a: number; v: number; dead: boolean }
 
 function Bugs() {
+  const nf = useT().nf;
   const box = useRef<HTMLDivElement>(null);
   const els = useRef<(HTMLButtonElement | null)[]>([]);
   const bugs = useRef<Bug[]>([]);
@@ -157,14 +163,14 @@ function Bugs() {
 
   return (
     <div className="nf-bugs" ref={box}>
-      <div className="nf-hud"><span className="label">{won ? 'build exitoso' : 'depurando…'}</span><b>{killed} / {N_BUGS} bugs</b></div>
+      <div className="nf-hud"><span className="label">{won ? nf.ok : nf.debugging}</span><b>{killed} / {N_BUGS} bugs</b></div>
       <p className={`nf-code${won ? ' ok' : ''}`}>{won ? '200 OK' : '404'}</p>
-      <h1 className="nf-h">{won ? 'Bugs arreglados. La página sigue sin existir, pero tú sí sabes depurar.' : FRASE}</h1>
+      <h1 className="nf-h">{won ? nf.fixed : nf.phrase}</h1>
       <div className="nf-bar"><i style={{ width: `${(killed / N_BUGS) * 100}%` }} /></div>
-      <div className="nf-btns center"><Home soft={!won} />{won && <button type="button" className="btn btn-soft" onClick={again}>Otra vez</button>}</div>
+      <div className="nf-btns center"><Home soft={!won} />{won && <button type="button" className="btn btn-soft" onClick={again}>{nf.once}</button>}</div>
       {splats.map((s, i) => <i key={`${round}-${i}`} className="nf-splat" style={{ left: s.x, top: s.y }} />)}
       {Array.from({ length: N_BUGS }, (_, i) => !dead.includes(i) && (
-        <button key={`${round}-${i}`} type="button" className="nf-bug" ref={(el) => { els.current[i] = el; }} aria-label="Aplastar bug" onPointerDown={() => squash(i)}>
+        <button key={`${round}-${i}`} type="button" className="nf-bug" ref={(el) => { els.current[i] = el; }} aria-label={nf.squash} onPointerDown={() => squash(i)}>
           <svg viewBox="0 0 34 34" aria-hidden="true">
             <g className="legs"><path d="M9 12 3 9M9 17H2M9 22l-6 3M25 12l6-3M25 17h7M25 22l6 3" /></g>
             <ellipse cx="17" cy="19" rx="8" ry="10" fill="#d23c3c" /><circle cx="17" cy="9" r="5" />
@@ -183,6 +189,7 @@ function Bugs() {
 interface Letter { el: HTMLSpanElement; w: number; h: number; x: number; y: number; a: number; vx: number; vy: number; va: number; drag: boolean; t: number }
 
 function Gravity() {
+  const nf = useT().nf;
   const box = useRef<HTMLDivElement>(null);
   const [round, setRound] = useState(0);
 
@@ -209,7 +216,7 @@ function Gravity() {
     };
     const big = W < 520;
     line('404', 'd', 80, 300);
-    line(big ? 'No existe' : 'Este proyecto no existe', 'w', big ? 230 : 260, 900);
+    line(big ? nf.short : nf.long, 'w', big ? 230 : 260, 900);
     let raf = 0;
     const loop = () => {
       const H = b.clientHeight, Wn = b.clientWidth, now = performance.now();
@@ -224,13 +231,13 @@ function Gravity() {
     };
     loop();
     return () => { cancelAnimationFrame(raf); L.forEach((l) => l.el.remove()); };
-  }, [round]);
+  }, [round, nf]);
 
   return (
     <div className="nf-grav" ref={box}>
       <div className="nf-hud">
-        <h1 className="label"><span className="sr-only">404 · {FRASE} </span>Arrastra y lanza las letras</h1>
-        <span className="nf-btns"><button type="button" className="btn btn-soft" onClick={() => setRound((r) => r + 1)}>↺ Reordenar</button><Home /></span>
+        <h1 className="label"><span className="sr-only">404 · {nf.phrase} </span>{nf.drag}</h1>
+        <span className="nf-btns"><button type="button" className="btn btn-soft" onClick={() => setRound((r) => r + 1)}>{nf.shuffle}</button><Home /></span>
       </div>
     </div>
   );

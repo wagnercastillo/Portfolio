@@ -7,11 +7,13 @@ import { ContactTerminal } from './ContactTerminal';
 import { MessageBuilder, toBrief, type Form } from './MessageBuilder';
 import { PhoneMock } from './PhoneMock';
 import { TimeDiff } from './TimeDiff';
+import { useT } from './useT';
 
 /** Estado compartido: lo que se arma a la izquierda se ve llegar al teléfono de la derecha. */
 export function ContactInteractive({ perfil }: { perfil: Perfil }) {
+  const t = useT();
   const [form, setForm] = useState<Form>({ needs: [], when: null, name: '', note: '' });
-  const message = buildMessage(toBrief(form));
+  const message = buildMessage(toBrief(form, t), t.lang);
 
   // "escribiendo…" breve en el teléfono cada vez que cambia el mensaje
   const [shown, setShown] = useState(message);
@@ -33,18 +35,18 @@ export function ContactInteractive({ perfil }: { perfil: Perfil }) {
 
   const [time, setTime] = useState('');
   useEffect(() => {
-    const tick = () => setTime(new Intl.DateTimeFormat('es', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date()));
+    const tick = () => setTime(new Intl.DateTimeFormat(t.locale, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date()));
     tick();
     const id = setInterval(tick, 15000);
     return () => clearInterval(id);
-  }, []);
+  }, [t.locale]);
 
   const ciudad = perfil.ubicacion.split(',')[0];
   return (
     <div className="contact-grid">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 28, minWidth: 0 }}>
         <ContactChat foto={perfil.foto} nombre={perfil.nombre} />
-        <h2 id="ct" className="scramble">¿Construimos algo juntos?</h2>
+        <h2 id="ct" className="scramble">{t.contact.title}</h2>
         <MessageBuilder form={form} onChange={setForm} message={message} email={perfil.email} telefono={perfil.telefono} onSend={onSend} />
         <TimeDiff ciudad={ciudad} />
       </div>

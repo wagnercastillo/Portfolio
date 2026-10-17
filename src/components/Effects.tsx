@@ -1,6 +1,8 @@
 'use client';
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import type { Dict } from '@/lib/i18n';
+import { useT } from './useT';
 
 const GLYPHS = '!<>-_\\/[]{}=+*^?#01ABCDEFXYZ';
 
@@ -28,6 +30,18 @@ function countUp(el: HTMLElement) {
   requestAnimationFrame(step);
 }
 
+// Cómo se comporta el puntero según lo que tenga debajo (gana la primera coincidencia).
+const modes = (t: Dict): [selector: string, mode: string, label?: string][] => [
+  ['.nf-canvas, .nf-bug, .nf-ltr, input, textarea, select', 'hide'],
+  ['.exp-card', 'pill', t.cursor.drag],
+  ['.pcard, .feat, .tl-item', 'pill', t.cursor.view],
+  ['.photo-next', 'pill', t.cursor.photo],
+  ['.g-slide', 'zoom', '+'],
+  ['.tech, .client-row, .icon-btn, .btn, .site-nav a, .filters button, .opt-chips button', 'stick'],
+  ['a, button', 'link'],
+  ['p, h1, h2, h3, li, blockquote', 'text'],
+];
+
 /**
  * Efectos de página que trabajan sobre el DOM ya renderizado: reveal al hacer scroll,
  * scramble, contador, spotlight, tilt 3D, botones magnéticos y cursor personalizado.
@@ -35,9 +49,11 @@ function countUp(el: HTMLElement) {
  */
 export function Effects() {
   const pathname = usePathname();
+  const t = useT();
 
   useEffect(() => {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const MODES = modes(t), drop = t.cursor.drop;
     const cleanups: (() => void)[] = [];
 
     // reveal + scramble + contador
@@ -106,23 +122,46 @@ export function Effects() {
     if (matchMedia('(pointer: fine)').matches && !reduce) {
       const root = document.documentElement;
       const dot = Object.assign(document.createElement('div'), { className: 'cur cur-dot' });
-      const ring = Object.assign(document.createElement('div'), { className: 'cur cur-ring', innerHTML: '<span>Ver →</span>' });
+      const ring = Object.assign(document.createElement('div'), { className: 'cur cur-ring', innerHTML: '<span></span>' });
+      const label = ring.firstChild as HTMLElement;
       dot.setAttribute('aria-hidden', 'true');
       ring.setAttribute('aria-hidden', 'true');
       document.body.append(dot, ring);
       let x = -100, y = -100, rx = x, ry = y, raf = 0;
+      let mode = '', over: Element | null = null, stuck: HTMLElement | null = null;
+      const setMode = (m: string, el: Element | null, text = '') => {
+        if (label.textContent !== text) label.textContent = text;
+        if (m === mode && el === over) return;
+        if (mode) { ring.classList.remove(mode); dot.classList.remove(mode); }
+        if (m) { ring.classList.add(m); dot.classList.add(m); }
+        mode = m; over = el;
+        stuck = m === 'stick' ? el as HTMLElement : null;
+        ring.style.width = ring.style.height = ring.style.borderRadius = '';
+        if (stuck) ring.style.borderRadius = getComputedStyle(stuck).borderRadius;
+        if (m === 'text' && el) ring.style.height = `${parseFloat(getComputedStyle(el).fontSize) * 1.15}px`;
+      };
       const move = (e: PointerEvent) => {
         x = e.clientX; y = e.clientY;
         root.classList.add('has-cursor');
         dot.style.transform = `translate(${x}px, ${y}px)`;
         const t = e.target as HTMLElement;
-        const card = t.closest('.pcard, .feat, .tl-item');
-        ring.classList.toggle('view', !!card);
-        ring.classList.toggle('link', !card && !!t.closest('a, button'));
+        for (const [sel, m, text] of MODES) {
+          const el = t.closest(sel);
+          if (el) return setMode(m, el, el.matches('.exp-card.drag') ? drop : text);
+        }
+        setMode('', null);
       };
       const leave = () => root.classList.remove('has-cursor');
       const loop = () => {
-        rx += (x - rx) * 0.18; ry += (y - ry) * 0.18;
+        let tx = x, ty = y;
+        if (stuck) {
+          // se ciñe al control y se inclina un poco hacia el puntero
+          const r = stuck.getBoundingClientRect();
+          tx = r.left + r.width / 2; ty = r.top + r.height / 2;
+          tx += (x - tx) * 0.12; ty += (y - ty) * 0.12;
+          ring.style.width = `${r.width + 8}px`; ring.style.height = `${r.height + 8}px`;
+        }
+        rx += (tx - rx) * 0.18; ry += (ty - ry) * 0.18;
         ring.style.transform = `translate(${rx}px, ${ry}px)`;
         raf = requestAnimationFrame(loop);
       };
@@ -139,7 +178,7 @@ export function Effects() {
     }
 
     return () => cleanups.forEach((c) => c());
-  }, [pathname]);
+  }, [pathname, t]);
 
   return null;
 }

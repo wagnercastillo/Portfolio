@@ -1,3 +1,4 @@
+import { getT } from '@/lib/i18n-server';
 import { cityLights, dots, ridge } from '@/lib/scene';
 import { IntroMotion } from './IntroMotion';
 
@@ -63,11 +64,12 @@ function Ridge({ layer, d }: { layer: 'back' | 'mid' | 'floor' | 'front'; d: str
   );
 }
 
-export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: string; ubicacion: string }) {
+export async function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: string; ubicacion: string }) {
+  const t = await getT();
   const words = nombre.split(' ');
   let n = 0;
   return (
-    <section className="intro" aria-label={`Portada: ${nombre}, ${ubicacion}`}>
+    <section className="intro" aria-label={t.intro.aria(nombre, ubicacion)}>
       <div className="intro-stage">
         <div className="in-sky" aria-hidden="true" />
         <div className="in-milky night" aria-hidden="true" />
@@ -123,7 +125,7 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
           <i className="in-ground" />
         </div>
         <div className="in-fog" aria-hidden="true" />
-        <a href="#top" className="in-hint">Desliza <span aria-hidden="true">↓</span></a>
+        <a href="#top" className="in-hint">{t.intro.scroll} <span aria-hidden="true">↓</span></a>
       </div>
       <IntroMotion />
     </section>

@@ -7,6 +7,8 @@ import { ProjectLinks } from './ProjectLinks';
 import { Gallery } from './Gallery';
 import { StackCover, StatusBadge } from './StackCover';
 import { TechIconSvg } from './TechIconSvg';
+import { useT } from './useT';
+import { localize, term } from '@/lib/i18n';
 
 export type CardProject = Project & { icons: IconRef[] };
 
@@ -15,6 +17,7 @@ export function QuickView({ items, index, bodies, dir, onClose, onNav }: {
   items: CardProject[]; index: number | null; bodies: Record<string, React.ReactNode>; dir: number;
   onClose: () => void; onNav: (delta: number) => void;
 }) {
+  const t = useT();
   const ref = useRef<HTMLDialogElement>(null);
   const p = index === null ? null : items[index];
   const shots = p ? [p.portada, ...p.galeria].filter((s): s is string => !!s) : [];
@@ -37,8 +40,8 @@ export function QuickView({ items, index, bodies, dir, onClose, onNav }: {
       {p && (
         <div className="qv-inner" key={p.slug} style={{ '--dir': dir } as React.CSSProperties}>
           <div className="qv-top">
-            <span className="label">{index! + 1} / {items.length} · ← → para navegar</span>
-            <button type="button" className="icon-btn" onClick={onClose} aria-label="Cerrar">✕</button>
+            <span className="label">{index! + 1} / {items.length} · {t.projects.navHint}</span>
+            <button type="button" className="icon-btn" onClick={onClose} aria-label={t.projects.close}>✕</button>
           </div>
           {shots.length ? (
             <div className="cover-wrap"><Gallery images={shots} title={p.titulo} /><StatusBadge project={p} /></div>
@@ -46,7 +49,7 @@ export function QuickView({ items, index, bodies, dir, onClose, onNav }: {
             <StackCover project={p} icons={p.icons} ratio="21 / 8" />
           )}
           <div>
-            <p className="label" style={{ margin: 0 }}>{p.categoria}{p.cliente && ` · ${p.cliente}`}</p>
+            <p className="label" style={{ margin: 0 }}>{term(t, p.categoria)}{p.cliente && ` · ${p.cliente}`}</p>
             <h2 id="qv-title" className="qv-title">{p.titulo}</h2>
             <p className="qv-sum">{p.resumen}</p>
           </div>
@@ -61,11 +64,11 @@ export function QuickView({ items, index, bodies, dir, onClose, onNav }: {
           <div className="prose-content qv-body">{bodies[p.slug]}</div>
           <div className="qv-actions">
             <ProjectLinks project={p} />
-            <Link href={`/proyectos/${p.slug}`} className="btn btn-soft">Ver caso completo →</Link>
+            <Link href={localize(t.lang, `/proyectos/${p.slug}`)} className="btn btn-soft">{t.projects.fullCase}</Link>
           </div>
           <div className="qv-nav">
-            <button type="button" className="icon-btn" onClick={() => onNav(-1)} aria-label="Proyecto anterior">←</button>
-            <button type="button" className="icon-btn" onClick={() => onNav(1)} aria-label="Proyecto siguiente">→</button>
+            <button type="button" className="icon-btn" onClick={() => onNav(-1)} aria-label={t.projects.prev}>←</button>
+            <button type="button" className="icon-btn" onClick={() => onNav(1)} aria-label={t.projects.next}>→</button>
           </div>
         </div>
       )}

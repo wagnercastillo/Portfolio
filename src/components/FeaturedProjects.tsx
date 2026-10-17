@@ -4,6 +4,8 @@ import { ProjectCover } from './ProjectCover';
 import { ProjectCard } from './ProjectCard';
 import { TurnoTicket } from './TurnoTicket';
 import { stackIcons } from '@/lib/tech-icons';
+import { getT } from '@/lib/i18n-server';
+import { localize, term } from '@/lib/i18n';
 
 const d = (n: number) => ({ '--d': n }) as React.CSSProperties;
 
@@ -27,24 +29,25 @@ function DashboardMock() {
 const MOCK_WIDE = 'evalia';
 const MOCK_TURNO = 'sgt-gestion-de-turnos';
 
-export function FeaturedProjects({ projects }: { projects: Project[] }) {
+export async function FeaturedProjects({ projects }: { projects: Project[] }) {
+  const t = await getT();
   const [first, second, ...rest] = projects;
   if (!first) return null;
   return (
     <section id="proyectos" aria-labelledby="dest" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <h2 id="dest" className="section-title reveal scramble" style={{ margin: '32px 4px 0' }}>Proyectos destacados</h2>
+      <h2 id="dest" className="section-title reveal scramble" style={{ margin: '32px 4px 0' }}>{t.projects.featured}</h2>
       <div className="grid">
-        <Link href={`/proyectos/${first.slug}`} className="card feat wide span2 spot tilt reveal">
+        <Link href={localize(t.lang, `/proyectos/${first.slug}`)} className="card feat wide span2 spot tilt reveal">
           <div className="meta label">
-            <span>{first.cliente || first.categoria} · {first.categoria}</span>
-            <span style={{ color: 'var(--ok-fg)' }}>● {first.estado}</span>
+            <span>{first.cliente || term(t, first.categoria)} · {term(t, first.categoria)}</span>
+            <span style={{ color: 'var(--ok-fg)' }}>● {term(t, first.estado)}</span>
           </div>
           {first.slug === MOCK_WIDE && !first.portada ? <DashboardMock /> : <ProjectCover project={first} ratio="16 / 7" priority />}
           <div><h3>{first.titulo}</h3><p>{first.resumen}</p></div>
         </Link>
         {second && (second.slug === MOCK_TURNO && !second.portada ? (
-          <Link href={`/proyectos/${second.slug}`} className="card feat turno tilt reveal" style={d(1)}>
-            <div className="label">{second.cliente} · {second.categoria}</div>
+          <Link href={localize(t.lang, `/proyectos/${second.slug}`)} className="card feat turno tilt reveal" style={d(1)}>
+            <div className="label">{second.cliente} · {term(t, second.categoria)}</div>
             <TurnoTicket />
             <div><h3>{second.titulo}</h3><p>{second.resumen}</p></div>
           </Link>

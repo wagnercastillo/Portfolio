@@ -1,4 +1,7 @@
+'use client';
 import type { IconRef } from '@/lib/tech-icons';
+import { term } from '@/lib/i18n';
+import { useT } from './useT';
 import { coverHue, statusInfo, type Project } from '@/lib/projects';
 import { ProjectCover } from './ProjectCover';
 import { TechIconSvg } from './TechIconSvg';
@@ -12,11 +15,13 @@ const ring = (i: number, n: number, rx: number, ry: number) => {
 
 export function StatusBadge({ project }: { project: Pick<Project, 'estado' | 'fecha'> }) {
   const s = statusInfo(project);
-  return <span className={`status ${s.kind}`}><i aria-hidden="true" />{s.label}{s.year && <em>{s.year}</em>}</span>;
+  const t = useT();
+  return <span className={`status ${s.kind}`}><i aria-hidden="true" />{term(t, s.label)}{s.year && <em>{s.year}</em>}</span>;
 }
 
 /** Portada: captura subida (los logos del stack aparecen encima al pasar el mouse) o, si no hay, los logos flotando. */
 export function StackCover({ project, icons = [], ratio }: { project: Project; icons?: IconRef[]; ratio?: string }) {
+  const t = useT();
   if (!icons.length) {
     return (
       <div className="cover-wrap">
@@ -38,7 +43,7 @@ export function StackCover({ project, icons = [], ratio }: { project: Project; i
           </span>
         );
       })}
-      <span className="sc-cta">Ver caso →</span>
+      <span className="sc-cta">{t.projects.viewCase}</span>
     </div>
   );
   return (

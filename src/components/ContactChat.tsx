@@ -2,9 +2,11 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useInView } from './useInView';
+import { useT } from './useT';
 
 /** Avatar con burbuja: "escribiendo…" y luego el saludo, al llegar a la sección. */
 export function ContactChat({ foto, nombre }: { foto: string | null; nombre: string }) {
+  const t = useT();
   const [ref, seen] = useInView<HTMLDivElement>();
   const [typing, setTyping] = useState(true);
   useEffect(() => {
@@ -15,12 +17,12 @@ export function ContactChat({ foto, nombre }: { foto: string | null; nombre: str
   const first = nombre.split(' ')[0];
   return (
     <div className="chat" ref={ref}>
-      {foto && <Image src={foto} alt={`Foto de ${nombre}`} width={64} height={64} className="chat-avatar" />}
+      {foto && <Image src={foto} alt={t.contact.photoOf(nombre)} width={64} height={64} className="chat-avatar" />}
       <div className={`chat-bubble${seen ? ' on' : ''}`} aria-live="polite">
         {typing ? (
-          <span className="typing" role="img" aria-label={`${first} está escribiendo`}><i /><i /><i /></span>
+          <span className="typing" role="img" aria-label={t.contact.typing(first)}><i /><i /><i /></span>
         ) : (
-          <p>¡Hola! Soy {first}. Cuéntame qué quieres construir y te respondo personalmente, sin intermediarios.</p>
+          <p>{t.contact.greeting(first)}</p>
         )}
       </div>
     </div>
