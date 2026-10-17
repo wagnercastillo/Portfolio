@@ -15,9 +15,9 @@ export function StatusBadge({ project }: { project: Pick<Project, 'estado' | 'fe
   return <span className={`status ${s.kind}`}><i aria-hidden="true" />{s.label}{s.year && <em>{s.year}</em>}</span>;
 }
 
-/** Portada: captura subida o, si no hay, los logos del stack flotando. */
+/** Portada: captura subida (los logos del stack aparecen encima al pasar el mouse) o, si no hay, los logos flotando. */
 export function StackCover({ project, icons = [], ratio }: { project: Project; icons?: IconRef[]; ratio?: string }) {
-  if (project.portada || !icons.length) {
+  if (!icons.length) {
     return (
       <div className="cover-wrap">
         <ProjectCover project={project} ratio={ratio} />
@@ -26,21 +26,25 @@ export function StackCover({ project, icons = [], ratio }: { project: Project; i
     );
   }
   const h = coverHue(project.slug);
+  const stack = (
+    <div className={`cover stack-cover${project.portada ? ' over' : ''}`} aria-hidden="true"
+      style={{ aspectRatio: ratio, backgroundImage: `radial-gradient(circle at 50% 50%, hsl(${h} 70% 55% / .16), transparent 70%)` }}>
+      {icons.map((t, i) => {
+        const rest = ring(i, icons.length, 33, 27), open = ring(i, icons.length, 40, 33);
+        return (
+          <span key={t.name} className={`sc-icon${i === 0 ? ' main' : ''}`} title={t.name}
+            style={{ '--i': i, '--brand': t.icon.color ?? 'var(--accent)', '--x': `${rest.x}%`, '--y': `${rest.y}%`, '--hx': `${open.x}%`, '--hy': `${open.y}%` } as React.CSSProperties}>
+            <TechIconSvg icon={t.icon} size={i === 0 ? 34 : 20} />
+          </span>
+        );
+      })}
+      <span className="sc-cta">Ver caso →</span>
+    </div>
+  );
   return (
     <div className="cover-wrap">
-      <div className="cover stack-cover" aria-hidden="true"
-        style={{ aspectRatio: ratio, backgroundImage: `radial-gradient(circle at 50% 50%, hsl(${h} 70% 55% / .16), transparent 70%)` }}>
-        {icons.map((t, i) => {
-          const rest = ring(i, icons.length, 33, 27), open = ring(i, icons.length, 40, 33);
-          return (
-            <span key={t.name} className={`sc-icon${i === 0 ? ' main' : ''}`} title={t.name}
-              style={{ '--i': i, '--brand': t.icon.color ?? 'var(--accent)', '--x': `${rest.x}%`, '--y': `${rest.y}%`, '--hx': `${open.x}%`, '--hy': `${open.y}%` } as React.CSSProperties}>
-              <TechIconSvg icon={t.icon} size={i === 0 ? 34 : 20} />
-            </span>
-          );
-        })}
-        <span className="sc-cta">Ver caso →</span>
-      </div>
+      {project.portada && <ProjectCover project={project} ratio={ratio} />}
+      {stack}
       <StatusBadge project={project} />
     </div>
   );

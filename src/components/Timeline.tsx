@@ -45,7 +45,7 @@ export function Timeline({ projects, foto }: { projects: Project[]; foto: string
       tv.style.transform = `translate3d(${x}px,0,0)`;
       ln.style.width = `${x}px`;
       const n = litCount(x, centers);
-      stations.forEach((s, i) => s.classList.toggle('lit', i < n));
+      stations.forEach((s, i) => { s.classList.toggle('lit', i < n); s.classList.toggle('here', i === n - 1 && horiz()); });
       // año de fondo: el de la última estación alcanzada; gira al cambiar
       const y = yearsOf[Math.max(n - 1, 0)];
       if (yr.textContent !== y) { yr.textContent = y; yr.classList.remove('roll'); void yr.offsetWidth; yr.classList.add('roll'); }
@@ -81,13 +81,30 @@ export function Timeline({ projects, foto }: { projects: Project[]; foto: string
             </li>
             {items.map((p) => {
               const [y, m] = p.fecha.split('-');
+              // portada al frente + 2 de la galería detrás; en el DOM va al final para quedar encima
+              const pics = [...new Set([p.portada, ...p.galeria])].filter((s): s is string => !!s).slice(0, 3);
               return (
                 <li key={p.slug} className="tl-stop">
                   <span className="tl-dot" aria-hidden="true" />
-                  <Link href={`/proyectos/${p.slug}`} className="card tl-item spot">
-                    <span className="label">{MESES[Number(m) - 1]} {y}</span>
-                    <h3>{p.titulo}</h3>
-                    <span className="tl-meta">{p.cliente || p.categoria} · {p.estado}</span>
+                  <Link href={`/proyectos/${p.slug}`} className="tl-item">
+                    <span className="tl-big" aria-hidden="true">{m}</span>
+                    {pics.length ? (
+                      <div className="tl-pics" aria-hidden="true">
+                        {pics.map((src, k) => (
+                          <div key={src} className={`tl-pic p${k}`}><Image src={src} alt="" width={400} height={250} sizes="220px" /></div>
+                        )).reverse()}
+                      </div>
+                    ) : (
+                      <div className="tl-pics empty" aria-hidden="true">
+                        <span>{y}</span>
+                        <div className="tl-chips">{p.stack.slice(0, 4).map((s) => <i key={s}>{s}</i>)}</div>
+                      </div>
+                    )}
+                    <div className="card tl-txt spot">
+                      <span className="label">{MESES[Number(m) - 1]} {y}</span>
+                      <h3>{p.titulo}</h3>
+                      <span className="tl-meta">{p.cliente || p.categoria} · {p.estado}</span>
+                    </div>
                   </Link>
                 </li>
               );

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProject, getProjects } from '@/lib/content';
+import { Gallery } from '@/components/Gallery';
 import { ProjectCover } from '@/components/ProjectCover';
 import { ProjectLinks } from '@/components/ProjectLinks';
 import { ProjectCard } from '@/components/ProjectCard';
@@ -31,6 +31,7 @@ export default async function ProjectPage({ params }: Props) {
   const [data, all] = await Promise.all([getProject(slug), getProjects()]);
   if (!data) notFound();
   const { project: p, body } = data;
+  const shots = [p.portada, ...p.galeria].filter((s): s is string => !!s);
   const others = all.filter((x) => x.slug !== slug && x.categoria === p.categoria).slice(0, 3);
 
   return (
@@ -64,21 +65,12 @@ export default async function ProjectPage({ params }: Props) {
         </div>
       </section>
 
-      <div className="card" style={{ padding: 16 }}><ProjectCover project={p} ratio="21 / 9" priority /></div>
+      <div className="card" style={{ padding: 16 }}>
+        {shots.length ? <Gallery images={shots} title={p.titulo} priority /> : <ProjectCover project={p} ratio="21 / 9" priority />}
+      </div>
 
       <article className="card prose-content reveal" style={{ padding: 'clamp(24px, 4vw, 48px)' }}>{body}</article>
 
-      {p.galeria.length > 0 && (
-        <div className="grid">
-          {p.galeria.map((src, i) => (
-            <div key={src} className="card reveal" style={{ padding: 12 }}>
-              <div className="cover">
-                <Image src={src} alt={`${p.titulo}, captura ${i + 1}`} fill sizes="(min-width: 640px) 50vw, 100vw" />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       {others.length > 0 && (
         <section aria-labelledby="mas" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

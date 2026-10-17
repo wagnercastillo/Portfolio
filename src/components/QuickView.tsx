@@ -4,7 +4,8 @@ import { useEffect, useRef } from 'react';
 import type { Project } from '@/lib/projects';
 import type { IconRef } from '@/lib/tech-icons';
 import { ProjectLinks } from './ProjectLinks';
-import { StackCover } from './StackCover';
+import { Gallery } from './Gallery';
+import { StackCover, StatusBadge } from './StackCover';
 import { TechIconSvg } from './TechIconSvg';
 
 export type CardProject = Project & { icons: IconRef[] };
@@ -16,6 +17,7 @@ export function QuickView({ items, index, bodies, dir, onClose, onNav }: {
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const p = index === null ? null : items[index];
+  const shots = p ? [p.portada, ...p.galeria].filter((s): s is string => !!s) : [];
 
   useEffect(() => {
     const d = ref.current;
@@ -30,7 +32,7 @@ export function QuickView({ items, index, bodies, dir, onClose, onNav }: {
   };
 
   return (
-    <dialog ref={ref} className="quickview" onClose={onClose} onKeyDown={onKey} aria-labelledby="qv-title"
+    <dialog ref={ref} className="quickview" onClose={(e) => { if (e.target === e.currentTarget) onClose(); }} onKeyDown={onKey} aria-labelledby="qv-title"
       onClick={(e) => { if (e.target === ref.current) onClose(); }}>
       {p && (
         <div className="qv-inner" key={p.slug} style={{ '--dir': dir } as React.CSSProperties}>
@@ -38,7 +40,11 @@ export function QuickView({ items, index, bodies, dir, onClose, onNav }: {
             <span className="label">{index! + 1} / {items.length} · ← → para navegar</span>
             <button type="button" className="icon-btn" onClick={onClose} aria-label="Cerrar">✕</button>
           </div>
-          <StackCover project={p} icons={p.icons} ratio="21 / 8" />
+          {shots.length ? (
+            <div className="cover-wrap"><Gallery images={shots} title={p.titulo} /><StatusBadge project={p} /></div>
+          ) : (
+            <StackCover project={p} icons={p.icons} ratio="21 / 8" />
+          )}
           <div>
             <p className="label" style={{ margin: 0 }}>{p.categoria}{p.cliente && ` · ${p.cliente}`}</p>
             <h2 id="qv-title" className="qv-title">{p.titulo}</h2>

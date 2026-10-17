@@ -1,0 +1,43 @@
+---
+titulo: "Auto Submit JEP"
+resumen: "Extensión de Chrome para el ServiceDesk GLPI de Cooperativa JEP: auto envío con temporizador, plantillas de ticket y snippets."
+cliente: "Cooperativa JEP"
+categoria: "Cliente"
+stack:
+  - "JavaScript"
+  - "Chrome Extension MV3"
+  - "GLPI"
+  - "TinyMCE"
+destacado: false
+orden: 17
+fecha: 2026-10-16
+estado: "En producción"
+portada: /proyectos/auto-submit-jep/00-portada.png
+galeria:
+  - /proyectos/auto-submit-jep/01-temporizador.png
+  - /proyectos/auto-submit-jep/02-plantillas.png
+  - /proyectos/auto-submit-jep/03-snippets.png
+  - /proyectos/auto-submit-jep/04-colores.png
+  - /proyectos/auto-submit-jep/05-nueva-plantilla.png
+  - /proyectos/auto-submit-jep/06-temporizador-oscuro.png
+  - /proyectos/auto-submit-jep/07-plantillas-oscuro.png
+  - /proyectos/auto-submit-jep/08-snippets-oscuro.png
+  - /proyectos/auto-submit-jep/09-glpi-plantilla.png
+  - /proyectos/auto-submit-jep/10-glpi-snippet-antes.png
+  - /proyectos/auto-submit-jep/11-glpi-snippet-despues.png
+---
+## Problema
+
+El equipo de soporte repetía a diario los mismos tickets y respuestas en GLPI 9.5: llenar campos uno por uno, escribir las mismas soluciones y esperar para presionar **Añadir**.
+
+## Solución
+
+Extensión de Chrome (Manifest V3) que se integra con el ServiceDesk sin tocar el servidor. Las plantillas aprovechan que el formulario de ticket nuevo de GLPI acepta sus campos por URL, así el ticket se abre ya llenado y GLPI aplica sus propias reglas de campos obligatorios.
+
+## Funcionalidades
+
+- Temporizador que presiona **Añadir** en la solución tras el tiempo elegido
+- Plantillas de ticket (tipo, categoría, origen, ubicación, urgencia, estado, duración, título y descripción) abiertas con un clic
+- Snippets: `/atajo` + `Tab` dentro del editor TinyMCE se reemplaza por el texto guardado
+- Exportar e importar plantillas y snippets en `.json` para compartir con el equipo
+- Modo claro y oscuro, 6 paletas más color personalizado con contraste WCAG automático

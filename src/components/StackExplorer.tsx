@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { TechIcon } from '@/lib/tech-icons';
 import { intersectBySlug } from '@/lib/projects';
+import type { Marca } from '@/lib/experience';
+import Image from 'next/image';
 import { TechIconSvg as Icon } from './TechIconSvg';
 
 export interface TechItem {
@@ -12,15 +14,18 @@ export interface TechItem {
   projects: { slug: string; titulo: string; cliente: string }[];
 }
 
+export interface Cliente { name: string; marca: Marca | null; projects: { slug: string; titulo: string; portada: string | null }[] }
+
 /**
  * Mosaico de tecnologías con pestañas por grupo. Se pueden elegir varias: el panel muestra
  * los proyectos que las combinan todas y se atenúan las que no aparecen junto a la selección.
  */
-export function StackExplorer({ items, groups, clientes }: { items: TechItem[]; groups: string[]; clientes: string[] }) {
+export function StackExplorer({ items, groups, clientes }: { items: TechItem[]; groups: string[]; clientes: Cliente[] }) {
   const tabs = ['Todo', ...groups];
   const [tab, setTab] = useState('Todo');
   const [changed, setChanged] = useState(false);
   const [picked, setPicked] = useState<string[]>([]);
+  const [cliente, setCliente] = useState<Cliente | null>(null);
   const [pill, setPill] = useState({ left: 4, width: 0 });
   const btns = useRef<Record<string, HTMLButtonElement | null>>({});
   const grid = useRef<HTMLUListElement>(null);
@@ -72,8 +77,12 @@ export function StackExplorer({ items, groups, clientes }: { items: TechItem[]; 
   const sel = picked.map((n) => items.find((t) => t.name === n)!).filter(Boolean);
   const matches = intersectBySlug(sel.map((t) => t.projects));
   // atenuar lo que, sumado a la selección actual, no aparece en ningún proyecto
-  const dim = (t: TechItem) => sel.length > 0 && !picked.includes(t.name) && intersectBySlug([matches, t.projects]).length === 0;
-  const toggle = (t: TechItem) => setPicked((p) => (p.includes(t.name) ? p.filter((n) => n !== t.name) : [...p, t.name]));
+  // con un cliente elegido: se encienden las tecnologías usadas con él y se atenúa el resto
+  const usedWith = (t: TechItem) => !!cliente && t.projects.some((p) => p.cliente === cliente.name);
+  const dim = (t: TechItem) => sel.length > 0 ? !picked.includes(t.name) && intersectBySlug([matches, t.projects]).length === 0 : !!cliente && !usedWith(t);
+  const toggle = (t: TechItem) => { setCliente(null); setPicked((p) => (p.includes(t.name) ? p.filter((n) => n !== t.name) : [...p, t.name])); };
+  const paises = new Set(clientes.map((c) => c.marca?.pais).filter(Boolean)).size;
+  const totalProjs = clientes.reduce((n, c) => n + c.projects.length, 0);
   const one = sel.length === 1 ? sel[0] : null;
 
   return (
@@ -94,7 +103,7 @@ export function StackExplorer({ items, groups, clientes }: { items: TechItem[]; 
         <ul className="tech-grid" ref={grid}>
           {shown.map((t, i) => (
             <li key={`${tab}-${t.name}`} className={changed ? 'enter' : undefined} style={{ '--d': i } as React.CSSProperties}>
-              <button type="button" className={`tech${dim(t) ? ' dim' : ''}`} style={brand(t)} aria-pressed={picked.includes(t.name)} onClick={() => toggle(t)}>
+              <button type="button" className={`tech${dim(t) ? ' dim' : ''}${usedWith(t) ? ' hit' : ''}`} style={brand(t)} aria-pressed={picked.includes(t.name)} onClick={() => toggle(t)}>
                 <Icon icon={t.icon} />
                 <span>{t.name}</span>
                 {t.projects.length > 0 && <b className="tech-count" aria-label={`${t.projects.length} proyectos`}>{t.projects.length}</b>}
@@ -112,11 +121,37 @@ export function StackExplorer({ items, groups, clientes }: { items: TechItem[]; 
 
       <aside className="card reveal tech-panel" style={{ padding: 32, '--d': 1, ...(one ? brand(one) : {}) } as React.CSSProperties} aria-live="polite">
         {sel.length === 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <h3 className="label">He trabajado con</h3>
-            <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 14, fontSize: 22, fontWeight: 700 }}>
-              {clientes.map((c) => <li key={c}>{c}</li>)}
+            <ul className="clients">
+              {clientes.map((c) => {
+                const on = cliente?.name === c.name, m = c.marca;
+                return (
+                  <li key={c.name} className={on ? 'on' : undefined} style={{ '--c': m?.color ?? 'var(--accent)' } as React.CSSProperties}>
+                    <button type="button" className="client-row" aria-pressed={on} onClick={() => setCliente(on ? null : c)}
+                      aria-label={`${c.name}: ${on ? 'quitar filtro' : 'ver las tecnologías que usé aquí'}`}>
+                      <span className="client-tile" style={m?.fondo ? { background: m.fondo } : undefined}>
+                        {m?.logo ? <img src={m.logo} alt="" /> : <span style={{ color: m?.fondo ? '#fff' : m?.color, fontSize: (m?.mono ?? c.name).length > 3 ? 10 : 15 }}>{m?.mono ?? c.name.slice(0, 3).toUpperCase()}</span>}
+                      </span>
+                      <span><strong>{c.name}</strong>{m && <small>{m.sector} · {m.pais}</small>}</span>
+                      <b className="client-n" aria-label={`${c.projects.length} proyectos`}>{c.projects.length}</b>
+                    </button>
+                    <div className="client-more"><div>
+                      <div className="client-thumbs">
+                        {c.projects.map((p) => (
+                          <Link key={p.slug} href={`/proyectos/${p.slug}`} title={p.titulo} tabIndex={on ? 0 : -1}>
+                            {p.portada ? <Image src={p.portada} alt={p.titulo} width={160} height={100} sizes="80px" /> : <span>{p.titulo}</span>}
+                          </Link>
+                        ))}
+                      </div>
+                    </div></div>
+                  </li>
+                );
+              })}
             </ul>
+            <p className="label" style={{ margin: 0, textTransform: 'none', letterSpacing: 0 }}>
+              {cliente ? `Mira en la grilla lo que usé con ${cliente.name}.` : `${clientes.length} organizaciones${paises ? ` · ${paises} ${paises === 1 ? 'país' : 'países'}` : ''} · ${totalProjs} proyectos`}
+            </p>
           </div>
         )}
 
