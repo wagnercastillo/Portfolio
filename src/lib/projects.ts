@@ -48,16 +48,21 @@ export const projectLinks = ({ demo, repo }: Pick<Project, 'demo' | 'repo'>) =>
 
 const normTech = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 // Nombres distintos para la misma tecnología entre el CV y el stack de los proyectos.
-const ALIASES = [['activedirectory', 'ldap'], ['materialui', 'mui'], ['tanstackquery', 'reactquery']];
+const ALIASES = [['activedirectory', 'ldap'], ['materialui', 'mui'], ['tanstackquery', 'reactquery'], ['whatsappapi', '360dialog'], ['firebase', 'fcm']];
 const techKeys = (t: string) => {
   const n = normTech(t);
   return ALIASES.find((g) => g.includes(n)) ?? [n];
 };
+// Lo que una tecnología trae consigo aunque el proyecto no lo liste (NestJS corre en Node con TypeScript, Next.js es React…).
+const IMPLIES: Record<string, string[]> = {
+  nestjs: ['nodejs', 'typescript'], express: ['nodejs'], nextjs: ['react'], flutter: ['dart'], gorouter: ['flutter'],
+};
+const projectTechs = (stack: string[]) => stack.flatMap((s) => [normTech(s), ...(IMPLIES[normTech(s)] ?? [])]);
 
-/** Proyectos cuyo stack incluye la tecnología (coincidencia exacta normalizada o alias). */
+/** Proyectos cuyo stack incluye la tecnología (coincidencia normalizada, alias o implícita). */
 export const projectsUsing = (tech: string, p: Project[]) => {
   const keys = techKeys(tech);
-  return p.filter((x) => x.stack.some((s) => keys.includes(normTech(s))));
+  return p.filter((x) => projectTechs(x.stack).some((k) => keys.includes(k)));
 };
 
 /** Color de marca utilizable en tema claro y oscuro; null si es casi negro o casi blanco. */

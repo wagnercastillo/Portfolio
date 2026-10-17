@@ -145,48 +145,60 @@ html { overflow-x: clip; } /* la escena usa 100vw (incluye la barra vertical): s
   .intro { height: 100vh; }
   .intro-stage > * { transform: none !important; opacity: 1; }
   .in-fog { opacity: 1; }
-  .in-shoot { display: none; }
+  .in-shoot, .intro .in-birds { display: none !important; }
 }
 
-/* ---- escena en hora dorada (modo claro): misma composición, luz de atardecer ---- */
+/* ---- escena de día (modo claro): misma composición, cielo azul del acento que se funde con el gris del sitio ---- */
 .intro .day { display: none; }
 :root:not([data-theme='dark']) .intro .night { display: none; }
 :root:not([data-theme='dark']) .intro .day { display: block; }
 :root:not([data-theme='dark']) .intro {
-  /* perspectiva atmosférica: lo lejano se funde con la luz, lo cercano es casi silueta */
-  --r-back-top: #d9786a; --r-back-bottom: #9c4d6a; --r-back-rim: rgba(255, 226, 160, .95);
-  --r-mid-top: #7b3a6e; --r-mid-bottom: #4f2453; --r-mid-rim: rgba(255, 196, 120, .7);
-  --r-floor-top: #3d2050; --r-floor-bottom: #26143a; --r-floor-rim: rgba(255, 186, 110, .5);
-  --r-front-top: #1d1030; --r-front-bottom: #10081c; --r-front-rim: rgba(255, 180, 110, .35);
-  --ground: #10081c;
+  /* perspectiva atmosférica en la gama del acento: lo lejano se aclara con la bruma, lo cercano es azul tinta */
+  --r-back-top: #c9d4f7; --r-back-bottom: #a7b8ee; --r-back-rim: rgba(255, 255, 255, .95);
+  --r-mid-top: #8199e4; --r-mid-bottom: #6079d3; --r-mid-rim: rgba(255, 255, 255, .6);
+  --r-floor-top: #4d66c8; --r-floor-bottom: #3a51ad; --r-floor-rim: rgba(255, 255, 255, .4);
+  --r-front-top: #1c2a6e; --r-front-bottom: #111a48; --r-front-rim: rgba(255, 255, 255, .28);
+  --ground: #111a48;
 }
-:root:not([data-theme='dark']) .intro-stage { background: #f48a3c; }
+:root:not([data-theme='dark']) .intro-stage { background: #7f9cf3; }
 :root:not([data-theme='dark']) .in-sky { background:
-  radial-gradient(30% 22% at 84% 64%, rgba(255, 246, 210, .95), rgba(255, 200, 110, .6) 45%, transparent 75%),
-  radial-gradient(120% 26% at 70% 66%, rgba(255, 196, 90, .85), rgba(255, 140, 60, .45) 40%, transparent 72%),
-  radial-gradient(90% 60% at 20% 20%, rgba(70, 40, 130, .45), transparent 70%),
-  linear-gradient(180deg, #17204f 0%, #34296a 16%, #6e3172 32%, #b23f6a 46%, #e5584a 58%, #f7813a 68%, #ffb04f 78%, #ffd27a 88%, #ffe3a3 100%); }
-:root:not([data-theme='dark']) .s3 { opacity: .35; filter: none; } /* primeras estrellas, arriba */
-:root:not([data-theme='dark']) .in-mist::before { background: radial-gradient(40% 50% at 25% 50%, rgba(255, 170, 110, .22), transparent 70%), radial-gradient(35% 45% at 75% 55%, rgba(255, 200, 120, .26), transparent 70%); }
-:root:not([data-theme='dark']) .in-glow { opacity: .55; }
-:root:not([data-theme='dark']) .in-city { opacity: .7; }
-:root:not([data-theme='dark']) .in-ch { background-image: linear-gradient(180deg, #fffaf2 30%, #ffe6c4 72%, #ffcf98 100%); }
-:root:not([data-theme='dark']) .in-name p { filter: drop-shadow(0 10px 40px rgba(90, 30, 50, .35)); }
-:root:not([data-theme='dark']) .in-kicker { color: rgba(255, 244, 232, .85); }
-:root:not([data-theme='dark']) .in-place { color: #fff0d2; }
-/* sol bajo, sin rayos: disco suave con halo amplio que se oculta tras las montañas */
-.in-sun { top: 55vh; right: 9vw; width: 17vmin; height: 17vmin; border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, #fffdf3 0%, #fff0c4 40%, #ffd27a 72%, #ffad4d 100%);
-  box-shadow: 0 0 50px 22px rgba(255, 236, 170, .85), 0 0 160px 80px rgba(255, 180, 80, .55), 0 0 380px 200px rgba(255, 130, 60, .3);
-  transform: translate3d(calc(var(--mx) * -8px), calc(var(--p) * 30px + var(--my) * -6px), 0); }
-/* franjas de nube (estratos) iluminadas desde abajo */
+  radial-gradient(38% 34% at 82% 16%, rgba(255, 255, 255, .55), transparent 70%),
+  linear-gradient(180deg, #2346E0 0%, #3a60ec 16%, #6789f2 34%, #9db5f8 52%, #c9d7fb 68%, #e3e9f7 82%, #EEF0F3 100%); }
+:root:not([data-theme='dark']) .s3 { display: none; }
+:root:not([data-theme='dark']) .in-mist::before { background: radial-gradient(40% 50% at 25% 50%, rgba(255, 255, 255, .4), transparent 70%), radial-gradient(35% 45% at 75% 55%, rgba(255, 255, 255, .35), transparent 70%); }
+:root:not([data-theme='dark']) .in-glow { display: none; }
+/* de día las luces de la ciudad pasan a ser techos blancos que brillan al sol */
+:root:not([data-theme='dark']) .in-city { opacity: .55; filter: grayscale(1) brightness(2.2); animation: none; }
+:root:not([data-theme='dark']) .in-ch { background-image: linear-gradient(180deg, #ffffff 40%, #e8eeff 80%, #d4dfff 100%); }
+/* nombre blanco: sombra azul tinta para que se lea sobre el cielo claro */
+:root:not([data-theme='dark']) .in-name p { filter: drop-shadow(0 4px 10px rgba(17, 26, 72, .35)) drop-shadow(0 14px 40px rgba(35, 70, 224, .45)); }
+:root:not([data-theme='dark']) .in-kicker { color: rgba(255, 255, 255, .92); }
+:root:not([data-theme='dark']) .in-place { color: #18257a; }
+/* sol alto: disco blanco, halo amplio y rayos que giran muy lento */
+.in-sun { top: 9vh; right: 13vw; width: 12vmin; height: 12vmin; border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, #fffbea 55%, #fff1c2 100%);
+  box-shadow: 0 0 40px 16px rgba(255, 255, 255, .9), 0 0 140px 70px rgba(255, 250, 225, .45), 0 0 320px 160px rgba(200, 215, 255, .35);
+  transform: translate3d(calc(var(--mx) * -8px), calc(var(--p) * -40px + var(--my) * -6px), 0); }
+.in-sun i { position: absolute; inset: -150%; border-radius: 50%; pointer-events: none;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, .22) 0deg 4deg, transparent 4deg 18deg);
+  -webkit-mask: radial-gradient(circle, #000 18%, transparent 62%); mask: radial-gradient(circle, #000 18%, transparent 62%);
+  animation: spin 90s linear infinite; }
+@keyframes spin { to { rotate: 1turn; } }
+/* cúmulos: base redondeada + dos bóvedas; sombra azulada abajo, bordes apenas difusos */
 .in-clouds { inset: 0; transform: translate3d(calc(var(--mx) * -12px), calc(var(--p) * -60px), 0); }
-.in-cloud { position: absolute; border-radius: 50%; opacity: var(--o); filter: blur(5px); will-change: translate;
-  background: linear-gradient(180deg, rgba(120, 50, 110, .35), rgba(255, 150, 110, .95) 55%, rgba(255, 210, 140, .9) 75%, rgba(255, 120, 80, .55)),
-    linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
-  -webkit-mask: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent); mask: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+.in-cloud { position: absolute; aspect-ratio: 3.4; border-radius: 999px; opacity: var(--o); will-change: translate;
+  background: linear-gradient(#fff 45%, #e3e9fb); filter: blur(.6px) drop-shadow(0 12px 20px rgba(35, 70, 224, .16));
   animation: cloud var(--drift) ease-in-out infinite alternate; }
+.in-cloud::before, .in-cloud::after { content: ''; position: absolute; aspect-ratio: 1; border-radius: 50%; background: linear-gradient(#fff 60%, #eef2fd); }
+.in-cloud::before { left: 16%; bottom: 30%; width: 38%; }
+.in-cloud::after { right: 18%; bottom: 22%; width: 50%; }
 @keyframes cloud { from { translate: -4vw 0; } to { translate: 5vw 0; } }
+/* aves: cruzan el cielo de izquierda a derecha y aletean */
+.in-birds { inset: 0; pointer-events: none; transform: translate3d(calc(var(--mx) * -18px), calc(var(--p) * -80px), 0); }
+.in-bird { position: absolute; left: 0; color: #18257a; opacity: .7; animation: fly linear infinite; }
+.in-bird svg { display: block; width: 100%; animation: flap var(--flap) ease-in-out infinite alternate; transform-origin: 50% 70%; }
+@keyframes fly { from { translate: -6vw 0; } to { translate: 106vw -6vh; } }
+@keyframes flap { to { scale: 1 .35; } }
 
 
 /* rendimiento: las secciones bajo el pliegue no se pintan ni animan hasta acercarse a la pantalla */
@@ -599,6 +611,46 @@ html { overflow-x: clip; } /* la escena usa 100vw (incluye la barra vertical): s
   .exp-panel[inert] { display: none; }
   .exp-panel > div { min-width: 0; }
 }
+
+/* 404 jugable: breakout, caza de bugs o letras con gravedad (rotan en cada visita) */
+.nf { position: relative; min-height: max(70svh, 520px); overflow: hidden; user-select: none; }
+.nf-static { min-height: inherit; padding: clamp(28px, 4vw, 56px); display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+.nf-static h1 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; }
+.nf-canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: none; touch-action: none; }
+.nf-hud { position: absolute; left: 24px; right: 24px; top: 20px; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 12px; pointer-events: none; }
+.nf-hud h1 { margin: 0; font-size: 11px; }
+.nf-hud b { font: 500 13px var(--mono); }
+.nf-btns { display: flex; gap: 8px; flex-wrap: wrap; pointer-events: auto; }
+.nf-btns.center { position: absolute; left: 0; right: 0; bottom: 32px; justify-content: center; z-index: 5; }
+.nf-hud .btn { min-height: 38px; padding: 0 14px; font-size: 13px; }
+.nf-msg { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; text-align: center; pointer-events: none; }
+.nf-msg.bottom { place-items: end center; padding-bottom: 72px; }
+.nf-msg > div { pointer-events: auto; padding: 18px 24px; border-radius: 18px; background: color-mix(in oklab, var(--surface) 92%, transparent); backdrop-filter: blur(6px); box-shadow: 0 20px 40px -24px rgba(0, 0, 0, .35); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.nf-msg p { margin: 0; color: var(--muted); }
+.nf-msg .nf-title { font-size: 34px; font-weight: 800; letter-spacing: -.03em; color: var(--fg); }
+.nf-msg .nf-btns { margin-top: 10px; justify-content: center; }
+.nf-bugs, .nf-grav { position: absolute; inset: 0; }
+.nf-code { position: absolute; left: 0; right: 0; top: 18%; margin: 0; text-align: center; font-weight: 800; font-size: clamp(90px, 14vw, 160px); line-height: 1; letter-spacing: -.06em; color: var(--accent); transition: color .5s; }
+.nf-code.ok { color: #18A058; }
+.nf-h { position: absolute; left: 24px; right: 24px; top: calc(18% + clamp(110px, 16vw, 180px)); margin: 0; text-align: center; font-size: clamp(22px, 3vw, 30px); font-weight: 800; letter-spacing: -.02em; text-wrap: balance; }
+.nf-bar { position: absolute; left: 50%; translate: -50% 0; top: calc(18% + clamp(170px, 22vw, 250px)); width: 260px; max-width: 70%; height: 8px; border-radius: 8px; background: var(--surface-2); overflow: hidden; }
+.nf-bar i { display: block; height: 100%; background: #18A058; transition: width .3s; }
+.nf-bug { position: absolute; left: 0; top: 0; z-index: 4; width: 34px; height: 34px; padding: 0; border: 0; background: none; cursor: crosshair; will-change: transform; }
+.nf-bug svg { width: 100%; height: 100%; display: block; }
+.nf-bug circle { fill: var(--fg); }
+.nf-bug path { fill: none; stroke: var(--fg); stroke-width: 2; stroke-linecap: round; }
+.nf-bug .legs { transform-origin: 17px 17px; animation: legs .18s steps(2) infinite; }
+@keyframes legs { 50% { transform: scaleX(-1); } }
+.nf-splat { position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; opacity: .5; pointer-events: none; animation: splat .3s ease-out;
+  background: radial-gradient(circle, #18A058 0 30%, transparent 32%), conic-gradient(from 10deg, #18A058 0 8%, transparent 0 16%, #18A058 0 22%, transparent 0 34%, #18A058 0 40%, transparent 0 55%, #18A058 0 60%, transparent 0 72%, #18A058 0 80%, transparent 0);
+  -webkit-mask: radial-gradient(circle, #000 60%, transparent 62%); mask: radial-gradient(circle, #000 60%, transparent 62%); }
+@keyframes splat { from { transform: scale(.2); opacity: 1; } }
+.nf-conf { position: absolute; top: -12px; width: 8px; height: 12px; pointer-events: none; animation: conf linear forwards; }
+@keyframes conf { to { transform: translateY(110svh) rotate(720deg); } }
+.nf-ltr { position: absolute; left: 0; top: 0; font-weight: 800; line-height: 1; cursor: grab; touch-action: none; will-change: transform; }
+.nf-ltr:active { cursor: grabbing; }
+.nf-ltr.d { font-size: clamp(100px, 14vw, 160px); letter-spacing: -.06em; color: var(--accent); }
+.nf-ltr.w { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -.02em; }
 
 /* contacto */
 .contact { background: var(--inv-bg); color: var(--inv-fg); padding: clamp(32px, 5vw, 72px); }

@@ -24,13 +24,21 @@ const SHOOTING = [
   rotate: `${((Math.atan2(s.dy, s.dx) * 180) / Math.PI).toFixed(1)}deg`,
   animationDuration: `${s.dur}s`, animationDelay: `${s.delay}s`,
 }) as React.CSSProperties);
-// atardecer: franjas finas de nube (estratos) iluminadas desde abajo
+// día: cúmulos que flotan lento (los lejanos, más chicos y tenues)
 const CLOUDS = [
-  { top: '24vh', left: '-8vw', width: '58vw', height: '1.6vh', '--drift': '70s', '--o': 0.75 },
-  { top: '31vh', left: '38vw', width: '70vw', height: '2.2vh', '--drift': '90s', '--o': 0.6 },
-  { top: '38vh', left: '6vw', width: '46vw', height: '1.2vh', '--drift': '80s', '--o': 0.5 },
-  { top: '17vh', left: '55vw', width: '40vw', height: '1vh', '--drift': '100s', '--o': 0.35 },
+  { top: '15vh', left: '4vw', width: '17vw', '--drift': '60s', '--o': 0.95 },
+  { top: '27vh', left: '70vw', width: '14vw', '--drift': '75s', '--o': 0.85 },
+  { top: '13vh', left: '29vw', width: '8vw', '--drift': '90s', '--o': 0.6 },
+  { top: '39vh', left: '-3vw', width: '11vw', '--drift': '70s', '--o': 0.6 },
+  { top: '41vh', left: '87vw', width: '8vw', '--drift': '85s', '--o': 0.5 },
 ].map((c) => c as React.CSSProperties);
+// bandada pequeña que cruza el valle; cada ave aletea a su ritmo
+const BIRDS = [
+  { top: 30, size: 22, dur: 26, delay: 0, flap: 0.55 },
+  { top: 33, size: 16, dur: 26, delay: 0.6, flap: 0.5 },
+  { top: 28, size: 14, dur: 26, delay: 1.1, flap: 0.6 },
+  { top: 18, size: 12, dur: 38, delay: 12, flap: 0.45 },
+].map((b) => ({ top: `${b.top}vh`, width: b.size, animationDuration: `${b.dur}s`, animationDelay: `${b.delay}s`, '--flap': `${b.flap}s` }) as React.CSSProperties);
 const FLOOR = ridge(34, { base: 120, amp: 28, points: 14 }); // suelo del valle donde se asienta la ciudad
 const BACK = ridge(31, { base: 230, amp: 120, points: 18 });
 const MID = ridge(32, { base: 295, amp: 110, points: 26 });
@@ -68,10 +76,17 @@ export function IntroScene({ nombre, rol, ubicacion }: { nombre: string; rol: st
         <i className="in-stars s3" style={{ boxShadow: STARS[2] }} aria-hidden="true" />
         {SHOOTING.map((style, i) => <i key={i} className="in-shoot night" style={style} aria-hidden="true" />)}
         <div className="in-moon night" aria-hidden="true" />
-        {/* atardecer (modo claro): sol bajo y franjas de nube */}
-        <div className="in-sun day" aria-hidden="true" />
+        {/* día (modo claro): sol alto con rayos, cúmulos y aves */}
+        <div className="in-sun day" aria-hidden="true"><i /></div>
         <div className="in-clouds day" aria-hidden="true">
           {CLOUDS.map((c, i) => <i key={i} className="in-cloud" style={c} />)}
+        </div>
+        <div className="in-birds day" aria-hidden="true">
+          {BIRDS.map((b, i) => (
+            <i key={i} className="in-bird" style={b}>
+              <svg viewBox="0 0 24 10"><path d="M1 7 Q6 1 12 7 Q18 1 23 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
+            </i>
+          ))}
         </div>
         <svg className="in-layer in-back" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
           <Ridge layer="back" d={BACK} />

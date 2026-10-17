@@ -77,12 +77,18 @@ describe('projectsUsing', () => {
     expect(projectsUsing('nestjs', list).map((x) => x.slug)).toEqual(['a']);
     expect(projectsUsing('Next.js', list).map((x) => x.slug)).toEqual(['b']);
   });
+  it('cuenta tecnologías implícitas (NestJS → Node.js y TypeScript, Next.js → React)', () => {
+    expect(projectsUsing('Node.js', list).map((x) => x.slug)).toEqual(['a']);
+    expect(projectsUsing('TypeScript', list).map((x) => x.slug)).toEqual(['a']);
+    expect(projectsUsing('React', list).map((x) => x.slug)).toEqual(['b']);
+  });
   it('usa alias (Active Directory ↔ LDAP, Material UI ↔ MUI)', () => {
     expect(projectsUsing('Active Directory', list).map((x) => x.slug)).toEqual(['b']);
     expect(projectsUsing('Material UI', list).map((x) => x.slug)).toEqual(['c']);
   });
   it('no confunde prefijos (React no es React Query)', () => {
-    expect(projectsUsing('React', list)).toEqual([]);
+    // 'b' entra por Next.js (implícito); 'c' solo tiene React Query y no cuenta
+    expect(projectsUsing('React', list).map((x) => x.slug)).toEqual(['b']);
   });
   it('sin coincidencias → []', () => expect(projectsUsing('Cobol', list)).toEqual([]));
 });

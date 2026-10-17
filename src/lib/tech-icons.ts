@@ -13,7 +13,7 @@ const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 const SLUGS: Record<string, string> = {
   materialui: 'mui', java: 'openjdk', rxjs: 'reactivex', fcm: 'firebase', vb6: 'dotnet', vbnet: 'dotnet',
   claudeapi: 'claude', gemini: 'googlegemini', tanstackquery: 'reactquery', googleoauth: 'google',
-  whatsappapi: 'whatsapp', gorouter: 'flutter', websocket: 'socketdotio',
+  whatsappapi: 'whatsapp', gorouter: 'flutter', websocket: 'socketdotio', c: 'dotnet', chromeextensionmv3: 'googlechrome',
 };
 
 // Íconos de trazo (viewBox 24) para lo que no tiene logo de marca.

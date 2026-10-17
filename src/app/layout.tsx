@@ -21,7 +21,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className={`${display.variable} ${mono.variable} ${intro.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: boot }} />
+        {/* en el servidor se ejecuta; si React vuelve a renderizar en el cliente queda inerte (text/plain) y no avisa (guía "preventing flash" de Next) */}
+        <script type={typeof window === 'undefined' ? 'text/javascript' : 'text/plain'} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: boot }} />
         <noscript><style>{'.reveal,.hero-bio{opacity:1!important;translate:none!important}'}</style></noscript>
       </head>
       <body>{children}</body>

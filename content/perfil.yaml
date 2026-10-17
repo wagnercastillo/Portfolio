@@ -46,13 +46,13 @@ educacion:
     detalle: Cisco (2) · Udemy (6) · Otras plataformas (4)
 habilidades:
   - grupo: Frontend
-    items: [JavaScript, TypeScript, React, Redux, Angular, RxJS, Next.js, Tailwind CSS, Material UI, Chart.js, PrimeReact]
+    items: [JavaScript, TypeScript, React, Redux, Angular, RxJS, Next.js, Tailwind CSS, Material UI, Chart.js, PrimeReact, TanStack Query, Zustand, Recharts, TinyMCE, Flutter, Dart, Tauri, Remotion, Chrome Extension MV3]
   - grupo: Backend
-    items: [Node.js, Express, NestJS, PHP, Laravel, Livewire, Python, Django, Flask, TensorFlow, Java, REST APIs, GraphQL]
+    items: [Node.js, Express, NestJS, .NET, C#, VB6, PHP, Laravel, Livewire, Python, FastAPI, Django, Flask, TensorFlow, Java, REST APIs, GraphQL, Socket.IO, WebSocket, Claude API, Gemini, WhatsApp API, Google OAuth, Google Maps, Google Calendar, FFmpeg]
   - grupo: DevOps & Infraestructura
-    items: [Docker, Git, GitLab, GitHub, Active Directory, Linux]
+    items: [Docker, Nx, Git, GitLab, GitHub, Active Directory, Linux, MinIO, GLPI]
   - grupo: Bases de datos
-    items: [PostgreSQL, MySQL, SQL Server, MongoDB, Firebase, Redis]
+    items: [PostgreSQL, MySQL, SQL Server, MongoDB, Firebase, Redis, Prisma, TypeORM]
   - grupo: Habilidades blandas
     items: [Trabajo en equipo, Adaptabilidad, Resolución de problemas, Comunicación efectiva, Proactividad]
 idiomas: Español (nativo) · Inglés (básico)
